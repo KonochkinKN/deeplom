@@ -23,7 +23,8 @@ public:
     QDateTime logDateTime;
     quint32 firstFrame;
     QString videoFile;
-    bool isReference() const {return alrorithmType == alg::None;}
+    bool isReference() const {return algorithmType == alg::None;}
+    bool isValid() const {return algorithmType < (uint)alg::algToString.size();}
 };
 
 #endif // LOGHEADER_H

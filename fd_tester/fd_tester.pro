@@ -1,4 +1,4 @@
-QT += qml quick multimedia widgets opengl testlib
+QT += qml quick multimedia widgets opengl testlib gui
 
 DEFINES += "__print=\'qDebug()<<__FILE__<<__LINE__<<Q_FUNC_INFO\'" \
     QT_DEPRECATED_WARNINGS
