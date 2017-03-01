@@ -4,6 +4,21 @@
 #include <QStandardPaths>
 #include <QString>
 
+namespace alg
+{
+enum Algorithms
+{
+    None,
+    ORB,
+    ORB2,
+    SIFT,
+    SURF,
+    BRISK
+};
+const QStringList algToString({"None", "ORB", "ORB2",
+                               "SIFT", "SURF", "BRISK"});
+}
+
 class Manager
 {
 public:

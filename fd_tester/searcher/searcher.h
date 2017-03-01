@@ -7,17 +7,11 @@
 
 #include <opencv/cv.h>
 
+#include "manager.h"
+
 namespace
 {
 const double MIN_DIST = 0.001;
-enum Algorithms
-{
-    eORB,
-    eORB2,
-    eSIFT,
-    eSURF,
-    eBRISK
-};
 }
 
 class Searcher : public QObject

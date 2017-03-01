@@ -96,31 +96,31 @@ void Searcher::detect()
     cv::Ptr<cv::DescriptorMatcher> matcher;
     switch(mAlgorithm)
     {
-    case eORB:
+    case alg::ORB:
     {
         detector = new cv::ORB(500, 2);
         matcher = new cv::BFMatcher(cv::NORM_HAMMING, true);
         break;
     }
-    case eORB2:
+    case alg::ORB2:
     {
         detector = new cv::ORB(500, 2, 8, 31, 0, 4);
         matcher = new cv::BFMatcher(cv::NORM_HAMMING2, true);
         break;
     }
-    case eSIFT:
+    case alg::SIFT:
     {
         detector = new cv::SIFT(400);
         matcher = new cv::FlannBasedMatcher();
         break;
     }
-    case eSURF:
+    case alg::SURF:
     {
         detector = new cv::SURF(400);
         matcher = new cv::FlannBasedMatcher();
         break;
     }
-    case eBRISK:
+    case alg::BRISK:
     {
         detector = new cv::BRISK();
         matcher = new cv::FlannBasedMatcher();
@@ -160,7 +160,7 @@ void Searcher::detect()
         return;
     }
 
-    if(mAlgorithm == eBRISK)
+    if(mAlgorithm == alg::BRISK)
     {
         tmpDescriptors.convertTo(tmpDescriptors, CV_32F);
         imgDescriptors.convertTo(imgDescriptors, CV_32F);
@@ -236,34 +236,12 @@ QPair<cv::Mat, QString> Searcher::getResult()
     QString alg;
     QString timeInfo = tr(" with elapsed time = %1 msec")
             .arg(QString::number(mElapsedTime));
-    switch(mAlgorithm)
+    if(mAlgorithm > -1 && mAlgorithm < alg::algToString.size())
     {
-    case eORB:
-    {
-        alg = "ORB";
-        break;
+        alg = alg::algToString.at(mAlgorithm);
     }
-    case eORB2:
+    else
     {
-        alg = "ORB2";
-        break;
-    }
-    case eSIFT:
-    {
-        alg = "SIFT";
-        break;
-    }
-    case eSURF:
-    {
-        alg = "SURF";
-        break;
-    }
-    case eBRISK:
-    {
-        alg = "BRISK";
-        break;
-    }
-    default:
         alg = "Unknown";
     }
 
@@ -296,11 +274,11 @@ void Searcher::optimalDetect()
     }
 
     Searcher* searchers = new Searcher[5];
-    searchers[0].setAlgoritm(eORB);
-    searchers[1].setAlgoritm(eORB2);
-    searchers[2].setAlgoritm(eSIFT);
-    searchers[3].setAlgoritm(eSURF);
-    searchers[4].setAlgoritm(eBRISK);
+    searchers[0].setAlgoritm(alg::ORB);
+    searchers[1].setAlgoritm(alg::ORB2);
+    searchers[2].setAlgoritm(alg::SIFT);
+    searchers[3].setAlgoritm(alg::SURF);
+    searchers[4].setAlgoritm(alg::BRISK);
 
     while(searchers[0].isDetecting() ||
           searchers[1].isDetecting() ||
