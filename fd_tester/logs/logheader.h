@@ -12,19 +12,22 @@ public:
     {}
 
     LogHeader(const LogHeader& rhs)
-        : algorithmType(rhs.algorithmType)
+        : title(rhs.title)
+        , algorithmType(rhs.algorithmType)
         , logDateTime(rhs.logDateTime)
         , firstFrame(rhs.firstFrame)
         , videoFile(rhs.videoFile)
     {}
     ~LogHeader(){}
 
+    QString title;
     quint32 algorithmType;
     QDateTime logDateTime;
     quint32 firstFrame;
     QString videoFile;
     bool isReference() const {return algorithmType == alg::None;}
-    bool isValid() const {return algorithmType < (uint)alg::algToString.size();}
+    bool isValid() const {return ((algorithmType < (uint)alg::algToString.size())
+                && !title.isEmpty());}
 };
 
 #endif // LOGHEADER_H

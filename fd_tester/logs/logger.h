@@ -13,7 +13,7 @@ class Logger : public QObject
     Q_OBJECT
 
 public:
-    explicit Logger(quint32 algType, quint32 firstFrame,
+    explicit Logger(QString title, quint32 algType, quint32 firstFrame,
                     QString video, QObject* parent = 0);
     explicit Logger(QString path, QObject* parent = 0);
     virtual ~Logger();

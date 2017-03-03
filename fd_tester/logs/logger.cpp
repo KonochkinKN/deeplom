@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QDataStream>
 
-Logger::Logger(quint32 algType, quint32 firstFrame,
+Logger::Logger(QString title, quint32 algType, quint32 firstFrame,
                QString video, QObject* parent)
     : QObject(parent)
 {
@@ -13,7 +13,7 @@ Logger::Logger(quint32 algType, quint32 firstFrame,
     mHeader.videoFile = video;
     QString filePath = QString("%1%2_%3%4")
             .arg(Manager::instance()->logsPath())
-            .arg(alg::algToString.at(algType))
+            .arg(title)
             .arg(QDateTime::currentDateTime().toString("dd_MM_yyyy_hh:mm:ss"))
             .arg(Manager::instance()->logFilesExtension());
 
@@ -41,8 +41,9 @@ LogHeader Logger::readHeader()
 
     LogHeader header;
     QDataStream out (&mFile);
+    out >> header.title;
     out >> header.algorithmType;
-    if (!header.isReference())
+    if (!header.isValid())
         return header;
 
     out >> header.logDateTime;
@@ -87,6 +88,7 @@ bool Logger::writeHeader()
 
     QDataStream in(&mFile);
 
+    in << mHeader.title;
     in << mHeader.algorithmType;
     in << mHeader.logDateTime;
     in << mHeader.firstFrame;

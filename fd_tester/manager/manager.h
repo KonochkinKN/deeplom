@@ -2,6 +2,7 @@
 #define MANAGER_H
 
 #include <QStandardPaths>
+#include <QStringList>
 #include <QString>
 
 namespace alg
@@ -28,6 +29,7 @@ public:
     QString logsDir(){return "logs";}
     QString logFilesExtension(){return ".log";}
     QString logsPath(){return mDataLocation.arg(this->logsDir());}
+    QStringList logs();
 
 private:
     Manager();

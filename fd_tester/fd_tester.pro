@@ -18,20 +18,27 @@ INCLUDEPATH += \
     manager \
     searcher \
     video \
-    logs
+    logs \
+    effeciency
 
 SOURCES += main.cpp \
     manager/manager.cpp \
     searcher/searcher.cpp \
     video/videodata.cpp \
-    logs/logger.cpp
+    logs/logger.cpp \
+    effeciency/analyzer.cpp \
+    application.cpp \
+    logs/refloggenerator.cpp
 
 HEADERS += \
     manager/manager.h \
     searcher/searcher.h \
     video/videodata.h \
     logs/logger.h \
-    logs/logheader.h
+    logs/logheader.h \
+    effeciency/analyzer.h \
+    application.h \
+    logs/refloggenerator.h
 
 RESOURCES += qml.qrc
 
