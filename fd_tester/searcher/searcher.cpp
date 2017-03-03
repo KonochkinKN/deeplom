@@ -26,7 +26,6 @@ Searcher::Searcher(QObject *parent)
 
 Searcher::~Searcher()
 {
-    cv::destroyAllWindows();
     if(pThread->isRunning())
         pThread->quit();
     pThread->deleteLater();

@@ -20,7 +20,7 @@ class Searcher : public QObject
 
 public:
     explicit Searcher(QObject *parent = 0);
-    virtual ~Searcher();
+    ~Searcher();
 
 public slots:
     void startDetecting();

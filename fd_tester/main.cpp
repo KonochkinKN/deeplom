@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setOrganizationName("AWESOME");
-    QCoreApplication::setApplicationName("fd_tester");
+    QCoreApplication::setApplicationName("fdt");
 
     QGuiApplication app(argc, argv);
 

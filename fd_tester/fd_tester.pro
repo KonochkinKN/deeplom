@@ -28,7 +28,8 @@ SOURCES += main.cpp \
     logs/logger.cpp \
     effeciency/analyzer.cpp \
     application.cpp \
-    logs/refloggenerator.cpp
+    logs/refloggenerator.cpp \
+    video/smartvideodata.cpp
 
 HEADERS += \
     manager/manager.h \
@@ -38,7 +39,8 @@ HEADERS += \
     logs/logheader.h \
     effeciency/analyzer.h \
     application.h \
-    logs/refloggenerator.h
+    logs/refloggenerator.h \
+    video/smartvideodata.h
 
 RESOURCES += qml.qrc
 

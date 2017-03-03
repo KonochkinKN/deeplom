@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QThread>
 #include <QVideoSurfaceFormat>
 
 namespace cv{
@@ -15,7 +16,7 @@ class VideoData : public QObject
 {
     Q_OBJECT
 public:
-    explicit VideoData(QObject *parent = 0);
+    virtual explicit VideoData(QObject *parent = 0);
     virtual ~VideoData();
 
     Q_PROPERTY(bool grayScale READ grayScale WRITE setGrayScale NOTIFY grayScaleChanged)
@@ -70,13 +71,15 @@ protected slots:
     void onSourceChanged();
     void updateData(bool null = false);
 
+protected:
+    cv::VideoCapture* pCapture;
+
 private:
     QAbstractVideoSurface* pSurface;
     QVideoSurfaceFormat mFormat;
     QTimer* pPlaybackTimer;
 
     QString mSource;
-    cv::VideoCapture* pCapture;
     double mFps;
     double mDurationSec;
     quint32 mFrame;
