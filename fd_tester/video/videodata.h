@@ -15,11 +15,11 @@ class QAbstractVideoSurface;
 class VideoData : public QObject
 {
     Q_OBJECT
+
 public:
-    virtual explicit VideoData(QObject *parent = 0);
+    explicit VideoData(QObject *parent = 0);
     virtual ~VideoData();
 
-    Q_PROPERTY(bool grayScale READ grayScale WRITE setGrayScale NOTIFY grayScaleChanged)
     Q_PROPERTY(QAbstractVideoSurface* videoSurface READ videoSurface WRITE setVideoSurface)
     Q_PROPERTY(quint32 position READ position WRITE setPosition NOTIFY positionChanged)
     Q_PROPERTY(bool hasVideo READ hasVideo NOTIFY hasVideoChanged)
@@ -30,7 +30,6 @@ public:
     Q_PROPERTY(int height READ height NOTIFY heightChanged)
     Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
 
-    Q_INVOKABLE bool grayScale(){return mGrayScale;}
     Q_INVOKABLE QAbstractVideoSurface* videoSurface() const;
     Q_INVOKABLE quint32 position();
     Q_INVOKABLE bool hasVideo();
@@ -50,7 +49,6 @@ signals:
     void widthChanged(int);
     void heightChanged(int);
     void playingChanged(bool);
-    void grayScaleChanged(bool);
 
 public slots:
     void setVideoSurface( QAbstractVideoSurface* surface );
@@ -60,7 +58,6 @@ public slots:
     void pause();
     void stop();
     void seek(quint32 frame);
-    void setGrayScale(bool data);
 
 protected slots:
     void setFps(double data);
@@ -72,20 +69,17 @@ protected slots:
     void updateData(bool null = false);
 
 protected:
-    cv::VideoCapture* pCapture;
-
-private:
-    QAbstractVideoSurface* pSurface;
-    QVideoSurfaceFormat mFormat;
     QTimer* pPlaybackTimer;
+    cv::VideoCapture* pCapture;
+    QVideoSurfaceFormat mFormat;
+    QAbstractVideoSurface* pSurface;
 
+    quint32 mFrame;
     QString mSource;
     double mFps;
     double mDurationSec;
-    quint32 mFrame;
     int mWidth;
     int mHeight;
-    bool mGrayScale;
 
     void closeSurface();
     void timerEvent(QTimerEvent*) override;

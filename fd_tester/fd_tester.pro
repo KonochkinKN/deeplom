@@ -19,7 +19,10 @@ INCLUDEPATH += \
     searcher \
     video \
     logs \
-    effeciency
+    effeciency \
+    demonstration \
+    demonstration/windows \
+    demonstration/views
 
 SOURCES += main.cpp \
     manager/manager.cpp \
@@ -50,3 +53,8 @@ else:unix: LIBS += -L$$PWD/../../../../../usr/lib/x86_64-linux-gnu/ -lpulse
 
 INCLUDEPATH += $$PWD/../../../../../usr/lib/x86_64-linux-gnu
 DEPENDPATH += $$PWD/../../../../../usr/lib/x86_64-linux-gnu
+
+DISTFILES += \
+    demonstration/windows/MainWindow.qml \
+    demonstration/main.qml \
+    demonstration/views/VideoView.qml

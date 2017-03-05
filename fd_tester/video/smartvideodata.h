@@ -9,6 +9,8 @@
 
 class SmartVideoData : public VideoData
 {
+    Q_OBJECT
+
 public:
     explicit SmartVideoData(QObject *parent = 0);
     ~SmartVideoData();
@@ -26,6 +28,9 @@ public slots:
     void stopDetecting();
     void startDetecting();
     void setTemplateImage(QString imgPath);
+
+private slots:
+    void onDetected();
 
 signals:
     void detected();

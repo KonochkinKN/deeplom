@@ -14,10 +14,9 @@
 
 VideoData::VideoData(QObject *parent)
     : QObject(parent)
-    , pSurface(nullptr)
     , pPlaybackTimer(new QTimer())
     , pCapture(new cv::VideoCapture())
-    , mGrayScale(false)
+    , pSurface(nullptr)
 {
     this->updateData(true);
     connect(this, &VideoData::sourceChanged, this, &VideoData::onSourceChanged);
@@ -224,15 +223,7 @@ void VideoData::timerEvent(QTimerEvent*)
     if(frame.empty())
         return;
 
-    if(mGrayScale)
-    {
-        cvtColor(frame, frame, CV_RGB2GRAY, 4);
-        cvtColor(frame, frame, CV_GRAY2RGBA, 4);
-    }
-    else
-    {
-        cvtColor(frame, frame, CV_RGB2RGBA, 4);
-    }
+    cvtColor(frame, frame, CV_RGB2RGBA, 4);
 
     QImage frameImg((const uchar *) frame.data, frame.cols, frame.rows,
                     frame.step, QImage::Format_ARGB32);
@@ -250,13 +241,4 @@ void VideoData::timerEvent(QTimerEvent*)
 
     pSurface->present( vFrame );
     emit positionChanged(mFrame);
-}
-
-void VideoData::setGrayScale(bool data)
-{
-    if(mGrayScale != data)
-    {
-        mGrayScale = data;
-        emit grayScaleChanged(mGrayScale);
-    }
 }

@@ -54,7 +54,7 @@ QStringList Manager::logs()
        if (header.isValid())
        {
            allLogs.append(header.title + "_" + header.
-                          testDateTime.toString("dd_MM_yyyy_hh:mm:ss"));
+                          logDateTime.toString("dd_MM_yyyy_hh:mm:ss"));
        }
        initializers.close();
     }

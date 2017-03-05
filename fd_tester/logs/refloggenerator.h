@@ -23,7 +23,7 @@ public:
     Q_INVOKABLE QString title(){return mTitle;}
     Q_INVOKABLE QString videoFile(){return mVideoFile;}
     Q_INVOKABLE quint32 firstFrame(){return mFirstFrame;}
-    Q_INVOKABLE bool isWritiing(){return mIsWriting;}
+    Q_INVOKABLE bool isWriting(){return mIsWriting;}
 
 signals:
     void titleChanged(QString name);
