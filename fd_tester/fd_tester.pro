@@ -57,4 +57,7 @@ DEPENDPATH += $$PWD/../../../../../usr/lib/x86_64-linux-gnu
 DISTFILES += \
     demonstration/windows/MainWindow.qml \
     demonstration/main.qml \
-    demonstration/views/VideoView.qml
+    demonstration/components/VideoComponent.qml \
+    demonstration/components/VideoControlBar.qml \
+    demonstration/views/RefLogGeneratorView.qml \
+    demonstration/windows/RefLogGeneratorWindow.qml

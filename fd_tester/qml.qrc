@@ -2,5 +2,9 @@
     <qresource prefix="/">
         <file>demonstration/windows/MainWindow.qml</file>
         <file>demonstration/main.qml</file>
+        <file>demonstration/components/VideoComponent.qml</file>
+        <file>demonstration/components/VideoControlBar.qml</file>
+        <file>demonstration/views/RefLogGeneratorView.qml</file>
+        <file>demonstration/windows/RefLogGeneratorWindow.qml</file>
     </qresource>
 </RCC>

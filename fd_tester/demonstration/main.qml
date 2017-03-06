@@ -5,6 +5,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.4
+import awesome.app 1.0
 
 import "windows"
 
@@ -17,13 +18,9 @@ ApplicationWindow{
     height: 150
     visible: true
 
-//    Application{
-//        id: mainObj
-//    }
+    Application{ id: mainObj;}
 
-    MainWindow{
-        anchors.fill: parent
-    }
+    MainWindow{ anchors.fill: parent;}
 
     MenuBar{
         id: menu
@@ -55,7 +52,10 @@ ApplicationWindow{
     MessageDialog{
         id: about
         title: qsTr("About")
-        text: qsTr("Testing software info.")
+        text: qsTr("Awesome application
+for testing feature detectors.
+Create you own reference logs and
+compare them with algorithm\'s output.")
     }
 
     menuBar: menu

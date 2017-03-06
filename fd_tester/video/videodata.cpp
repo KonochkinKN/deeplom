@@ -160,6 +160,7 @@ void VideoData::onTimeout()
 void VideoData::onSourceChanged()
 {
     emit hasVideoChanged(false);
+    __print << mSource;
     pCapture->open(QUrl(mSource).path().toStdString().c_str());
     emit hasVideoChanged(this->hasVideo());
 

@@ -17,6 +17,7 @@ public:
     Q_PROPERTY(QStringList logs READ logs NOTIFY logsChanged)
 
     Q_INVOKABLE QStringList logs(){return Manager::instance()->logs();}
+    Q_INVOKABLE QString logFilesPath(){return pManager->logsPath();}
 
     enum Algs
     {
@@ -32,6 +33,9 @@ public:
 
 signals:
     void logsChanged(QStringList logList);
+
+private:
+    Manager* pManager;
 
 };
 
