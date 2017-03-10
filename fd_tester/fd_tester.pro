@@ -1,7 +1,8 @@
 QT += qml quick multimedia widgets opengl testlib gui
 
 DEFINES += "__print=\'qDebug()<<__FILE__<<__LINE__<<Q_FUNC_INFO\'" \
-    QT_DEPRECATED_WARNINGS
+    QT_DEPRECATED_WARNINGS \
+    "APP_VERSION=1.0"
 
 CONFIG += c++11
 
@@ -60,4 +61,5 @@ DISTFILES += \
     demonstration/components/VideoComponent.qml \
     demonstration/components/VideoControlBar.qml \
     demonstration/views/RefLogGeneratorView.qml \
-    demonstration/windows/RefLogGeneratorWindow.qml
+    demonstration/windows/RefLogGeneratorWindow.qml \
+    demonstration/components/StrobeDrawComponent.qml

@@ -6,5 +6,6 @@
         <file>demonstration/components/VideoControlBar.qml</file>
         <file>demonstration/views/RefLogGeneratorView.qml</file>
         <file>demonstration/windows/RefLogGeneratorWindow.qml</file>
+        <file>demonstration/components/StrobeDrawComponent.qml</file>
     </qresource>
 </RCC>

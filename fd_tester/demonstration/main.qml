@@ -5,7 +5,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.4
-import awesome.app 1.0
+import awesome.app.fdt 1.0
 
 import "windows"
 

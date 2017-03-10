@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
-import awesome.app 1.0
+import awesome.app.fdt 1.0
 
 import "../components"
 
@@ -11,9 +11,22 @@ ColumnLayout{
 
     RefLogGenerator{ id: generator;}
 
+    RowLayout{
+        id: titleRow
+        Layout.preferredWidth: parent.width*0.8
+        Layout.alignment: Qt.AlignHCenter
+
+        Label{ text: "Log title:";}
+        TextArea{
+            id: title
+            Layout.preferredWidth: parent.width*0.8
+            Layout.preferredHeight: 25
+        }
+    }
+
     VideoComponent{
         id: video
-        sourcePath: "/home/kostyan/digit_1.avi"
+        sourcePath: "/home/kostyan/Видео/digit_1.avi"
         Layout.alignment: Qt.AlignCenter
         Layout.preferredWidth: video.hasVideo
                                ? Math.min(video.videoWidth, 640) : 640
@@ -21,6 +34,18 @@ ColumnLayout{
                                 ? Math.min(video.videoHeight, 480) : 480
 
         onPositionChanged: controls.position = video.position
+    }
+
+    StrobeDrawComponent{
+        id: strobe
+        contentWidth: video.videoWidth
+        contentHeight: video.videoHeight
+        z: parent.z+1
+        x: video.contentRect.x + video.x
+        y: video.contentRect.y + video.y
+        width: video.contentRect.width
+        height: video.contentRect.height
+        onRectChanged: console.log(videoRect)
     }
 
 
@@ -37,5 +62,15 @@ ColumnLayout{
         onPause: video.pause()
         onPlay: video.play()
         onSeek: video.seek(pos)
+    }
+
+    focus: true;
+    Keys.onPressed: {
+        if(event.key == Qt.Key_L) {
+            strobe.rotateStrobe(1)
+        }
+        if(event.key == Qt.Key_R) {
+            strobe.rotateStrobe(-1)
+        }
     }
 }

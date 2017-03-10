@@ -3,7 +3,7 @@ import QtQuick.Controls 1.4
 import QtGraphicalEffects 1.0
 import QtMultimedia 5.0
 
-import awesome.app 1.0
+import awesome.app.fdt 1.0
 
 VideoOutput{
     id: video
