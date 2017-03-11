@@ -64,13 +64,22 @@ ColumnLayout{
         onSeek: video.seek(pos)
     }
 
+    /*  $ key catcher $
+        R       = rotate clockwise
+        right   = move right
+        left    = move left
+        up      = move up
+        down    = move down
+
+        Shift +
+        R       = rotate counterclockwise
+        right   = width++
+        left    = width--
+        up      = height++
+        down    = height--
+      */
     focus: true;
-    Keys.onPressed: {
-        if(event.key == Qt.Key_L) {
-            strobe.rotateStrobe(1)
-        }
-        if(event.key == Qt.Key_R) {
-            strobe.rotateStrobe(-1)
-        }
-    }
+    Keys.onPressed: strobe.keyReact(event.key)
+    Keys.onReleased: strobe.keyReact(event.key, event.key == Qt.Key_Shift)
+    // key catcher end
 }

@@ -2,7 +2,7 @@ QT += qml quick multimedia widgets opengl testlib gui
 
 DEFINES += "__print=\'qDebug()<<__FILE__<<__LINE__<<Q_FUNC_INFO\'" \
     QT_DEPRECATED_WARNINGS \
-    "APP_VERSION=1.0"
+    "__version=1.0"
 
 CONFIG += c++11
 

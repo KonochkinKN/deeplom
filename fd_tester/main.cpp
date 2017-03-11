@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QCoreApplication::setOrganizationName("AWESOME");
     QCoreApplication::setApplicationName("fdt");
-    QCoreApplication::setApplicationVersion(QString::number(APP_VERSION));
+    QCoreApplication::setApplicationVersion(QString::number(__version));
 
     qmlRegisterType<Analyzer>("awesome.app.fdt", 1, 0, "Analyzer");
     qmlRegisterType<VideoData>("awesome.app.fdt", 1, 0, "VideoData");
