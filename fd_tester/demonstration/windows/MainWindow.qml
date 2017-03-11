@@ -13,7 +13,6 @@ Rectangle {
         anchors.fill: parent
 
         Button{
-            id: btn
             text: "Create reference logs"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: Qt.createQmlObject('RefLogGeneratorWindow{
@@ -22,14 +21,15 @@ Rectangle {
 
         Button{
             text: "Create testing logs"
-            onClicked: console.log("Fuck you!")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked:  Qt.createQmlObject('AlgorithmRunnerWindow{
+                                            visible: true}', mainView)
         }
 
         Button{
             text: "Analyze"
-            onClicked: console.log("Fuck you twice!")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: console.log("Nope!")
         }
     }
 }

@@ -62,4 +62,6 @@ DISTFILES += \
     demonstration/components/VideoControlBar.qml \
     demonstration/views/RefLogGeneratorView.qml \
     demonstration/windows/RefLogGeneratorWindow.qml \
-    demonstration/components/StrobeDrawComponent.qml
+    demonstration/components/StrobeDrawComponent.qml \
+    demonstration/views/AlgorithmRunnerView.qml \
+    demonstration/windows/AlgorithmRunnerWindow.qml

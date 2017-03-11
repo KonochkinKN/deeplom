@@ -16,25 +16,20 @@ Searcher::Searcher(QObject *parent)
     : QObject(parent)
     , mAlgorithm(-1)
     , mIsOptimal(false)
-    , pThread(new QThread())
     , mElapsedTime(0)
     , mSceneCorners(std::vector<cv::Point2f>(4, cv::Point2f(0, 0)))
 {
-    this->moveToThread(pThread);
-    connect(pThread, &QThread::started, this, &Searcher::chooseDetect);
+
 }
 
 Searcher::~Searcher()
 {
-    if(pThread->isRunning())
-        pThread->quit();
-    pThread->deleteLater();
+
 }
 
 void Searcher::startDetecting()
 {
-    if(!pThread->isRunning())
-        pThread->start();
+    this->chooseDetect();
 }
 
 qint64 Searcher::getElapsedTime()
@@ -80,14 +75,12 @@ void Searcher::detect()
     if(mTemplate.empty())
     {
         emit error("Invalid template");
-        pThread->quit();
         return;
     }
 
     if(mInputImg.empty())
     {
         emit error("Invalid image");
-        pThread->quit();
         return;
     }
 
@@ -128,7 +121,6 @@ void Searcher::detect()
     default:
     {
         emit error("Unknown algorithm");
-        pThread->quit();
         return;
     }
     }
@@ -155,7 +147,6 @@ void Searcher::detect()
     catch(cv::Exception& e)
     {
         emit error(tr("OpenCV exception: %1").arg(e.what()));
-        pThread->quit();
         return;
     }
 
@@ -227,7 +218,6 @@ void Searcher::detect()
     emit detected();
     detector.release();
     matcher.release();
-    pThread->quit();
 }
 
 QPair<cv::Mat, QString> Searcher::getResult()
@@ -249,7 +239,7 @@ QPair<cv::Mat, QString> Searcher::getResult()
 
 bool Searcher::isDetecting()
 {
-    return pThread->isRunning();
+    return true;
 }
 
 void Searcher::chooseDetect()
@@ -268,7 +258,6 @@ void Searcher::optimalDetect()
     if(mInputImg.empty() || mTemplate.empty())
     {
         emit error("Invalid images");
-        pThread->quit();
         return;
     }
 
@@ -323,7 +312,6 @@ void Searcher::optimalDetect()
         emit detected();
     }
     searchers->deleteLater();
-    pThread->quit();
 }
 
 void Searcher::setOptimalDetect(bool flag)

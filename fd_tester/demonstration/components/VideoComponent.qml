@@ -43,7 +43,7 @@ VideoOutput{
         videoData.stop()
     }
 
-    VideoData{ id: videoData;}
+    SmartVideoData{ id: videoData;}
 
     LinearGradient{
         anchors.fill: parent

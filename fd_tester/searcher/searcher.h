@@ -48,7 +48,6 @@ signals:
 private:
     int mAlgorithm;
     bool mIsOptimal;
-    QThread* pThread;
     qint64 mElapsedTime;
 
     cv::Mat mTemplate;

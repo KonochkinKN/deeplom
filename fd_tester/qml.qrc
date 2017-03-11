@@ -7,5 +7,7 @@
         <file>demonstration/views/RefLogGeneratorView.qml</file>
         <file>demonstration/windows/RefLogGeneratorWindow.qml</file>
         <file>demonstration/components/StrobeDrawComponent.qml</file>
+        <file>demonstration/windows/AlgorithmRunnerWindow.qml</file>
+        <file>demonstration/views/AlgorithmRunnerView.qml</file>
     </qresource>
 </RCC>

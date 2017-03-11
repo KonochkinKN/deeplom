@@ -80,16 +80,9 @@ ColumnLayout{
 
         Button{
             id: playBtn
-            text: "▸"//"▶"
-            onClicked: play()
-            enabled: hasVideo && !playing
-        }
-
-        Button{
-            id: pauseBtn
-            text: "⏸";//"▮▮"
-            onClicked: pause()
-            enabled: playing
+            text: (playing) ? "⏸" : "▸"//"▶" "▮▮"
+            onClicked: (playing) ? pause() : play()
+            enabled: hasVideo
         }
 
         Button{
