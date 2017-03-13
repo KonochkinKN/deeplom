@@ -3,9 +3,12 @@
 
 #include "videodata.h"
 #include "searcher.h"
+#include "manager.h"
 
 #include <QObject>
 #include <QThread>
+
+class SmartVideoDataPrivate;
 
 class SmartVideoData : public VideoData
 {
@@ -19,30 +22,35 @@ public:
                NOTIFY isDetectingChanged)
     Q_PROPERTY(QString templateImage READ templateImage
                WRITE setTemplateImage NOTIFY templateImageChanged)
+    Q_PROPERTY(int algType READ algType WRITE setAlgType
+               NOTIFY algTypeChanged)
+    Q_PROPERTY(qint64 iterationTime READ iterationTime
+               NOTIFY iterationTimeChanged)
 
-    Q_INVOKABLE bool isDetecting(){return mIsDetecting;}
-    Q_INVOKABLE QString templateImage(){return mTemplate;}
+    Q_INVOKABLE int algType();
+    Q_INVOKABLE bool isDetecting();
+    Q_INVOKABLE QString templateImage();
+    Q_INVOKABLE qint64 iterationTime();
 
 public slots:
-    void detect();
     void stopDetecting();
     void startDetecting();
+    void setAlgType(int type);
     void setTemplateImage(QString imgPath);
 
 private slots:
     void onDetected();
 
 signals:
-    void detected();
     void message(QString txt);
+    void algTypeChanged(int type);
+    void iterationTimeChanged(qint64 time);
     void isDetectingChanged(bool detecting);
     void templateImageChanged(QString imgPath);
 
 private:
-    bool mIsDetecting;
-    QString mTemplate;
-    Searcher* pSearcher;
-    QThread* pThread;
+    Q_DECLARE_PRIVATE(SmartVideoData)
+    SmartVideoDataPrivate* const d_ptr;
 };
 
 #endif // SMARTVIDEODATA_H

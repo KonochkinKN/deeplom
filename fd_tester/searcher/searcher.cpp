@@ -1,6 +1,8 @@
 #include "searcher.h"
 
 #include <QList>
+#include <QThread>
+#include <QDebug>
 #include <QElapsedTimer>
 
 #include <cmath>
@@ -14,7 +16,7 @@
 
 Searcher::Searcher(QObject *parent)
     : QObject(parent)
-    , mAlgorithm(-1)
+    , mAlgorithm(alg::None)
     , mIsOptimal(false)
     , mElapsedTime(0)
     , mSceneCorners(std::vector<cv::Point2f>(4, cv::Point2f(0, 0)))
@@ -25,11 +27,6 @@ Searcher::Searcher(QObject *parent)
 Searcher::~Searcher()
 {
 
-}
-
-void Searcher::startDetecting()
-{
-    this->chooseDetect();
 }
 
 qint64 Searcher::getElapsedTime()
@@ -141,15 +138,25 @@ void Searcher::detect()
     timer->start();
     try
     {
+        __print;
         detector->operator()(mTemplate, cv::Mat(), tmpKeypoints, tmpDescriptors);
+        __print;
         detector->operator()(mInputImg, cv::Mat(), imgKeypoints, imgDescriptors);
+    }
+    catch(cvflann::FLANNException& e)
+    {
+        __print;
+        emit error(tr("OpenCV FLANN exception: %1").arg(e.what()));
+        return;
     }
     catch(cv::Exception& e)
     {
+        __print;
         emit error(tr("OpenCV exception: %1").arg(e.what()));
         return;
     }
 
+    __print;
     if(mAlgorithm == alg::BRISK)
     {
         tmpDescriptors.convertTo(tmpDescriptors, CV_32F);
@@ -173,10 +180,12 @@ void Searcher::detect()
             good_matches.push_back(matches.at(i));
     }
 
-    cv::drawMatches(mTemplate, tmpKeypoints, mInputImg, imgKeypoints,
-                    good_matches, mResultImg, cv::Scalar::all(-1),
-                    cv::Scalar::all(-1), std::vector<char>(),
-                    cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+//    cv::drawMatches(mTemplate, tmpKeypoints, mInputImg, imgKeypoints,
+//                    good_matches, mResultImg, cv::Scalar::all(-1),
+//                    cv::Scalar::all(-1), std::vector<char>(),
+//                    cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+
+    mResultImg = mInputImg;
 
     if(good_matches.size() >= 4)
     {
@@ -202,22 +211,28 @@ void Searcher::detect()
                 scene_corners.at(3).x < scene_corners.at(2).x &&
                 scene_corners.at(0).y < scene_corners.at(3).y)
         {
-            line(mResultImg, scene_corners.at(0) + cv::Point2f(mTemplate.cols, 0),
-                 scene_corners.at(1) + cv::Point2f(mTemplate.cols, 0), cv::Scalar(0, 255, 0), 2 );
-            line(mResultImg, scene_corners.at(1) + cv::Point2f(mTemplate.cols, 0),
-                 scene_corners.at(2) + cv::Point2f(mTemplate.cols, 0), cv::Scalar(0, 255, 0), 2 );
-            line(mResultImg, scene_corners.at(2) + cv::Point2f(mTemplate.cols, 0),
-                 scene_corners.at(3) + cv::Point2f(mTemplate.cols, 0), cv::Scalar(0, 255, 0), 2 );
-            line(mResultImg, scene_corners.at(3) + cv::Point2f(mTemplate.cols, 0),
-                 scene_corners.at(0) + cv::Point2f(mTemplate.cols, 0), cv::Scalar(0, 255, 0), 2 );
+//            line(mResultImg, scene_corners.at(0) + cv::Point2f(mTemplate.cols, 0),
+//                 scene_corners.at(1) + cv::Point2f(mTemplate.cols, 0), cv::Scalar(0, 255, 0), 2 );
+//            line(mResultImg, scene_corners.at(1) + cv::Point2f(mTemplate.cols, 0),
+//                 scene_corners.at(2) + cv::Point2f(mTemplate.cols, 0), cv::Scalar(0, 255, 0), 2 );
+//            line(mResultImg, scene_corners.at(2) + cv::Point2f(mTemplate.cols, 0),
+//                 scene_corners.at(3) + cv::Point2f(mTemplate.cols, 0), cv::Scalar(0, 255, 0), 2 );
+//            line(mResultImg, scene_corners.at(3) + cv::Point2f(mTemplate.cols, 0),
+//                 scene_corners.at(0) + cv::Point2f(mTemplate.cols, 0), cv::Scalar(0, 255, 0), 2 );
+            line(mResultImg, scene_corners.at(0), scene_corners.at(1), cv::Scalar(0, 255, 0), 2 );
+            line(mResultImg, scene_corners.at(1), scene_corners.at(2), cv::Scalar(0, 255, 0), 2 );
+            line(mResultImg, scene_corners.at(2), scene_corners.at(3), cv::Scalar(0, 255, 0), 2 );
+            line(mResultImg, scene_corners.at(3), scene_corners.at(0), cv::Scalar(0, 255, 0), 2 );
             mSceneCorners = scene_corners;
         }
     }
     mElapsedTime = timer->elapsed();
+    if(mElapsedTime < 100)
+        QThread::msleep(100 - mElapsedTime);
 
-    emit detected();
     detector.release();
     matcher.release();
+    emit detected();
 }
 
 QPair<cv::Mat, QString> Searcher::getResult()
@@ -235,88 +250,6 @@ QPair<cv::Mat, QString> Searcher::getResult()
     }
 
     return QPair<cv::Mat, QString>(mResultImg, alg + timeInfo);
-}
-
-bool Searcher::isDetecting()
-{
-    return true;
-}
-
-void Searcher::chooseDetect()
-{
-    if(mIsOptimal)
-        this->optimalDetect();
-    else
-        this->detect();
-}
-
-void Searcher::optimalDetect()
-{
-    mTemplate = mTemplateRes;
-    mInputImg = mInputImgRes;
-
-    if(mInputImg.empty() || mTemplate.empty())
-    {
-        emit error("Invalid images");
-        return;
-    }
-
-    Searcher* searchers = new Searcher[5];
-    searchers[0].setAlgoritm(alg::ORB);
-    searchers[1].setAlgoritm(alg::ORB2);
-    searchers[2].setAlgoritm(alg::SIFT);
-    searchers[3].setAlgoritm(alg::SURF);
-    searchers[4].setAlgoritm(alg::BRISK);
-
-    while(searchers[0].isDetecting() ||
-          searchers[1].isDetecting() ||
-          searchers[2].isDetecting() ||
-          searchers[3].isDetecting() ||
-          searchers[4].isDetecting()){}
-
-    int N = -1;
-    double dx1, dx2, dy1, dy2, diag1, diag2, deltaDiags;
-    double dDiags = 100;
-    std::vector<cv::Point2f> strobe;
-
-    for(int i = 0; i < 5; i++)
-    {
-        strobe = searchers[i].getStrobe();
-        dx1 = strobe.at(0).x - strobe.at(2).x;
-        dy1 = strobe.at(0).y - strobe.at(2).y;
-        dx2 = strobe.at(1).x - strobe.at(3).x;
-        dy2 = strobe.at(1).y - strobe.at(3).y;
-        diag1 = sqrt(pow(dx1, 2) + pow(dy1, 2));
-        diag2 = sqrt(pow(dx2, 2) + pow(dy2, 2));
-        deltaDiags = std::abs(diag1 - diag2);
-        if(diag1 > 10 && diag2 > 10 && dDiags > deltaDiags)
-        {
-            dDiags = deltaDiags;
-            N = i;
-        }
-    }
-    if(N != -1)
-    {
-        mElapsedTime = searchers[N].getElapsedTime();
-        mResultImg = searchers[N].getResult().first;
-        mAlgorithm = N;
-        emit detected();
-    }
-    else
-    {
-        mElapsedTime = searchers[0].getElapsedTime();
-        mResultImg = searchers[0].getResult().first;
-        mAlgorithm = 0;
-        emit error("Can't find object\n"
-                   "Try again with another options or template");
-        emit detected();
-    }
-    searchers->deleteLater();
-}
-
-void Searcher::setOptimalDetect(bool flag)
-{
-    mIsOptimal = flag;
 }
 
 std::vector<cv::Point2f> Searcher::getStrobe()

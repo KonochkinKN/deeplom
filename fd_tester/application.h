@@ -14,10 +14,9 @@ public:
     explicit Application(QObject *parent = 0);
     virtual ~Application();
 
-    Q_PROPERTY(QStringList logs READ logs NOTIFY logsChanged)
-
     Q_INVOKABLE QStringList logs(){return Manager::instance()->logs();}
     Q_INVOKABLE QString logFilesPath(){return pManager->logsPath();}
+    Q_INVOKABLE QStringList algorithms(){return alg::algToString;}
 
     enum Algs
     {
@@ -30,9 +29,6 @@ public:
     };
 
     Q_ENUMS(Algs)
-
-signals:
-    void logsChanged(QStringList logList);
 
 private:
     Manager* pManager;

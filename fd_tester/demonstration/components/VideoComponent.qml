@@ -12,7 +12,7 @@ VideoOutput{
     fillMode: VideoOutput.PreserveAspectFit
 
     property string sourcePath
-    property string iterationTime
+    property string iterationTime: videoData.iterationTime
 
     property int position: videoData.position
     property bool hasVideo: videoData.hasVideo
@@ -21,6 +21,8 @@ VideoOutput{
     property int videoHeight: videoData.height
     property double duration: videoData.durationSec*1000.0
     property bool playing: videoData.playing
+
+    property bool detecting: videoData.isDetecting
 
     onSourcePathChanged: videoData.source = sourcePath;
 
@@ -43,7 +45,26 @@ VideoOutput{
         videoData.stop()
     }
 
-    SmartVideoData{ id: videoData;}
+    function startDetecting(){
+        videoData.startDetecting();
+    }
+
+    function stopDetecting(){
+        videoData.stopDetecting();
+    }
+
+    function setAlgorithm(alg){
+        videoData.setAlgType(alg);
+    }
+
+    function setTemplate(temp){
+        videoData.setTemplateImage(temp)
+    }
+
+    SmartVideoData{
+        id: videoData;
+        onMessage: console.log("MESSAGE:", txt)
+    }
 
     LinearGradient{
         anchors.fill: parent

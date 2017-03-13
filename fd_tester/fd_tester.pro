@@ -4,7 +4,7 @@ DEFINES += "__print=\'qDebug()<<__FILE__<<__LINE__<<Q_FUNC_INFO\'" \
     QT_DEPRECATED_WARNINGS \
     "__version=1.0"
 
-CONFIG += c++11
+CONFIG += c++11 exception
 
 LIBS += -ldl \
         -lopencv_core \
@@ -44,7 +44,8 @@ HEADERS += \
     effeciency/analyzer.h \
     application.h \
     logs/refloggenerator.h \
-    video/smartvideodata.h
+    video/smartvideodata.h \
+    video/smartvideodata_p.h
 
 RESOURCES += qml.qrc
 

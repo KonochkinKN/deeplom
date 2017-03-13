@@ -23,7 +23,7 @@ public:
     ~Searcher();
 
 public slots:
-    void startDetecting();
+    void detect();
     qint64 getElapsedTime();
     void setAlgoritm(int alg);
     void setTemplate(QString path);
@@ -31,15 +31,7 @@ public slots:
     void setInputImage(QString path);
     void setInputImage(cv::Mat image);
     QPair<cv::Mat, QString> getResult();
-    // Optimal detection
-    bool isDetecting();
-    void setOptimalDetect(bool flag);
     std::vector<cv::Point2f> getStrobe();
-
-private slots:
-    void detect();
-    void chooseDetect();
-    void optimalDetect();
 
 signals:
     void detected();
