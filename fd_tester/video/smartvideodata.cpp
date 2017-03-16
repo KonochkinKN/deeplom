@@ -1,5 +1,5 @@
 #include "smartvideodata.h"
-#include "smartvideodata_p.h"
+#include "manager.h"
 
 #include <QAbstractVideoSurface>
 #include <QPixmap>
@@ -15,87 +15,104 @@
 
 SmartVideoData::SmartVideoData(QObject *parent)
     : VideoData(parent)
-    , d_ptr(new SmartVideoDataPrivate)
+    , mAlgType(alg::None)
+    , pTimer(new QTimer())
+    , mIsDetecting(false)
+    , pSearcher(new Searcher())
 {
-    Q_D(SmartVideoData);
-    d->q_ptr = this;
 
-    connect(d, &SmartVideoDataPrivate::detected,
-            this, &SmartVideoData::onDetected);
 }
 
 SmartVideoData::~SmartVideoData()
 {
-    d_ptr->deleteLater();
+    pTimer->deleteLater();
+    pSearcher->deleteLater();
 }
 
 int SmartVideoData::algType()
 {
-    Q_D(SmartVideoData);
-    return d->mAlgType;
+    return this->mAlgType;
 }
 
 bool SmartVideoData::isDetecting()
 {
-    Q_D(SmartVideoData);
-    return d->mIsDetecting;
-}
-
-QString SmartVideoData::templateImage()
-{
-    Q_D(SmartVideoData);
-    return d->mTemplate;
+    return this->mIsDetecting;
 }
 
 qint64 SmartVideoData::iterationTime()
 {
-    Q_D(SmartVideoData);
-    return d->mIterationTime;
+    return this->pSearcher->getElapsedTime();
 }
 
-void SmartVideoData::startDetecting()
+QString SmartVideoData::templateImage()
 {
-    Q_D(SmartVideoData);
-    if(!d->pThread->isRunning())
-        d->pThread->start();
-//    if(!this->isDetecting())
-//    {
-//        connect(this, &SmartVideoData::positionChanged, this,
-//                &SmartVideoData::detect, Qt::DirectConnection);
-//        mIsDetecting = true;
-//        emit isDetectingChanged(mIsDetecting);
-//    }
+    return this->mTemplate;
 }
 
-void SmartVideoData::stopDetecting()
+void SmartVideoData::setAlgType(int type)
 {
-    Q_D(SmartVideoData);
-    if(d->pThread->isRunning())
-        d->pThread->requestInterruption();
-//    if(this->isDetecting())
-//    {
-//        disconnect(this, &SmartVideoData::positionChanged,
-//                   this, &SmartVideoData::detect);
-//        mIsDetecting = false;
-//        emit isDetectingChanged(mIsDetecting);
-//    }
+    if (this->mAlgType != type && type != alg::None &&
+            type < alg::algToString.size())
+    {
+        this->mAlgType = type;
+        emit algTypeChanged(this->mAlgType);
+    }
 }
 
 void SmartVideoData::setTemplateImage(QString imgPath)
 {
-    Q_D(SmartVideoData);
-    d->mTemplate = imgPath;
-    emit templateImageChanged(d->mTemplate);
+    this->mTemplate = imgPath;
+    emit templateImageChanged(this->mTemplate);
+}
+
+void SmartVideoData::startDetecting()
+{
+    this->mConnection = QObject::connect(pSearcher, &Searcher::detected, [=]
+    {
+        this->pTimer->singleShot(100, this, &SmartVideoData::onDetected);
+    });
+
+    connect(pSearcher, &Searcher::error,
+            this, &SmartVideoData::message);
+
+    this->mIsDetecting = true;
+    emit isDetectingChanged(this->mIsDetecting);
+
+    // start this shit
+    this->detect();
+}
+
+void SmartVideoData::stopDetecting()
+{
+    QObject::disconnect(mConnection);
+
+    disconnect(pSearcher, &Searcher::error,
+               this, &SmartVideoData::message);
+
+    this->mIsDetecting = false;
+    emit isDetectingChanged(this->mIsDetecting);
+}
+
+void SmartVideoData::detect()
+{
+    if (!this->isDetecting())
+        return;
+
+    cv::Mat frame;
+    this->pCapture->read(frame);
+
+    this->pSearcher->setAlgorithm(this->mAlgType);
+    this->pSearcher->setTemplate(this->mTemplate);
+    this->pSearcher->setInputImage(frame);
+    this->pSearcher->detect();
 }
 
 void SmartVideoData::onDetected()
 {
-    Q_D(SmartVideoData);
-
     if( !this->pSurface )
         return;
 
-    cv::Mat frame = d->pSearcher->getResult().first;
+    cv::Mat frame = this->pSearcher->getResult();
 
     if(frame.empty())
         return;
@@ -108,85 +125,17 @@ void SmartVideoData::onDetected()
 
     QVideoFrame vFrame(frameImg);
     QVideoFrame::PixelFormat pixelFormat =
-            QVideoFrame::pixelFormatFromImageFormat( frameImg.format() );
+            QVideoFrame::pixelFormatFromImageFormat(frameImg.format());
 
     this->closeSurface();
     this->mFormat = QVideoSurfaceFormat(
                 QPixmap::fromImage(frameImg).size(), pixelFormat);
 
-    this->pSurface->start( this->mFormat );
-    this->pSurface->present( vFrame );
+    this->pSurface->start(this->mFormat);
+    this->pSurface->present(vFrame);
 
-    this->setPosition(mFrame+1);
-    d->mIterationTime = d->pSearcher->getElapsedTime();
-    emit iterationTimeChanged(d->mIterationTime);
-}
+    this->setPosition(this->mFrame + 1);
+    emit iterationTimeChanged(this->pSearcher->getElapsedTime());
 
-void SmartVideoData::setAlgType(int type)
-{
-    Q_D(SmartVideoData);
-    if(type != alg::None && type < alg::algToString.size())
-    {
-        d->mAlgType = type;
-        emit algTypeChanged(d->mAlgType);
-    }
-}
-
-SmartVideoDataPrivate::SmartVideoDataPrivate(QObject *parent)
-    : QObject(parent)
-    , mAlgType(alg::None)
-    , mIsDetecting(false)
-    , mIterationTime(0)
-    , pThread(new QThread())
-{
-    this->moveToThread(pThread);
-    connect(pThread, &QThread::started, this,
-            &SmartVideoDataPrivate::detect);
-}
-
-SmartVideoDataPrivate::~SmartVideoDataPrivate()
-{
-    if (pThread->isRunning())
-    {
-        pThread->quit();
-        pThread->wait();
-    }
-
-    delete pThread;
-//    delete pSearcher;
-}
-
-void SmartVideoDataPrivate::detect()
-{
-    Q_Q(SmartVideoData);
-
-    pSearcher = new Searcher();
-    __print;
-    mIsDetecting = true;
-    emit q->isDetectingChanged(mIsDetecting);
-
-    pSearcher->setAlgoritm(mAlgType);
-    pSearcher->setTemplate(mTemplate);
-
-
-    connect(pSearcher, &Searcher::detected, this,
-            &SmartVideoDataPrivate::detected);
-    connect(pSearcher, &Searcher::error, q, &SmartVideoData::message);
-
-    while(!pThread->isInterruptionRequested())
-    {
-        cv::Mat frame;
-        q->pCapture->read(frame);
-        pSearcher->setInputImage(frame);
-        pSearcher->detect();
-    }
-
-    disconnect(pSearcher, &Searcher::detected, this,
-            &SmartVideoDataPrivate::detected);
-    disconnect(pSearcher, &Searcher::error, q, &SmartVideoData::message);
-
-    mIsDetecting = false;
-    emit q->isDetectingChanged(mIsDetecting);
-    delete pSearcher;
-    pThread->quit();
+    this->detect();
 }

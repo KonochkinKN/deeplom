@@ -27,6 +27,7 @@ RowLayout{
 
         GroupBox{
             id: algBox
+            enabled: !video.detecting
             Layout.preferredWidth: 100
             Layout.preferredHeight: 100
             Layout.alignment: Qt.AlignCenter
