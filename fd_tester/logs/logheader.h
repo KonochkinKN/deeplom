@@ -7,8 +7,9 @@
 class LogHeader
 {
 public:
-    LogHeader() :
-        algorithmType(alg::None)
+    LogHeader()
+        : version(-1)
+        , algorithmType(alg::None)
     {}
 
     LogHeader(const LogHeader& rhs)
@@ -20,14 +21,18 @@ public:
     {}
     ~LogHeader(){}
 
+    int version;
     QString title;
     quint32 algorithmType;
     QDateTime logDateTime;
     quint32 firstFrame;
     QString videoFile;
     bool isReference() const {return algorithmType == alg::None;}
-    bool isValid() const {return ((algorithmType < (uint)alg::algToString.size())
-                && !title.isEmpty());}
+    bool isValid() const
+    {
+        return ((algorithmType < (uint)alg::algToString.size())
+                && (version == __version) && !title.isEmpty());
+    }
 };
 
 #endif // LOGHEADER_H

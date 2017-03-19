@@ -8,6 +8,7 @@ Logger::Logger(QString title, quint32 algType, quint32 firstFrame,
                QString video, QObject* parent)
     : QObject(parent)
 {
+    mHeader.version = __version;
     mHeader.algorithmType = algType;
     mHeader.firstFrame = firstFrame;
     mHeader.videoFile = video;
@@ -41,6 +42,7 @@ LogHeader Logger::readHeader()
 
     LogHeader header;
     QDataStream out (&mFile);
+    out >> header.version;
     out >> header.title;
     out >> header.algorithmType;
     if (!header.isValid())
@@ -53,9 +55,9 @@ LogHeader Logger::readHeader()
     return header;
 }
 
-QPair<QPolygon, qint64> Logger::readNextBlock()
+QPair<QPolygonF, qint64> Logger::readNextBlock()
 {
-    QPair<QPolygon, qint64> result;
+    QPair<QPolygonF, qint64> result;
     if (!mFile.isOpen())
         return result;
 
@@ -88,6 +90,7 @@ bool Logger::writeHeader()
 
     QDataStream in(&mFile);
 
+    in << mHeader.version;
     in << mHeader.title;
     in << mHeader.algorithmType;
     in << mHeader.logDateTime;
@@ -97,7 +100,7 @@ bool Logger::writeHeader()
     return (in.status() == QDataStream::Ok);
 }
 
-bool Logger::writeNextBlock(QPolygon strobe, qint64 delay)
+bool Logger::writeNextBlock(QPolygonF strobe, qint64 delay)
 {
     if (!mFile.isOpen())
         return false;

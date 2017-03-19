@@ -9,5 +9,6 @@
         <file>demonstration/components/StrobeDrawComponent.qml</file>
         <file>demonstration/windows/AlgorithmRunnerWindow.qml</file>
         <file>demonstration/views/AlgorithmRunnerView.qml</file>
+        <file>demonstration/components/SmartVideoComponent.qml</file>
     </qresource>
 </RCC>

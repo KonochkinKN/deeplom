@@ -11,7 +11,7 @@ RowLayout{
 
     function init(){
         video.setTemplate("/home/kostyan/Изображения/Выделение_017.png");
-        video.setAlgorithm(1)
+        video.setAlgorithm(app.ORB)
     }
 
     Component.onCompleted: init();
@@ -57,7 +57,7 @@ RowLayout{
         id: videoCol
         Layout.alignment: Qt.AlignCenter
 
-        VideoComponent{
+        SmartVideoComponent{
             id: video
             sourcePath: "/home/kostyan/Видео/edit_2.avi"
             Layout.alignment: Qt.AlignCenter

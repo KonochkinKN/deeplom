@@ -107,7 +107,7 @@ void Analyzer::analyze()
 
     quint32 refFrame = refHeader.firstFrame;
     quint32 logFrame = logHeader.firstFrame;
-    QList<QPair<QPolygon, qint64>> refData, logData;
+    QList<QPair<QPolygonF, qint64>> refData, logData;
 
     // check data
     while(!refReader->atEnd())

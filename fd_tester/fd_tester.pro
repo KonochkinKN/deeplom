@@ -17,35 +17,34 @@ LIBS += -ldl \
 
 INCLUDEPATH += \
     manager \
-    searcher \
     video \
     logs \
-    effeciency \
     demonstration \
     demonstration/windows \
-    demonstration/views
+    demonstration/views \
+    algorithms
 
 SOURCES += main.cpp \
     manager/manager.cpp \
-    searcher/searcher.cpp \
     video/videodata.cpp \
     logs/logger.cpp \
-    effeciency/analyzer.cpp \
-    application.cpp \
     logs/refloggenerator.cpp \
-    video/smartvideodata.cpp
+    video/smartvideodata.cpp \
+    manager/application.cpp \
+    algorithms/analyzer.cpp \
+    algorithms/searcher.cpp
 
 HEADERS += \
     manager/manager.h \
-    searcher/searcher.h \
     video/videodata.h \
     logs/logger.h \
     logs/logheader.h \
-    effeciency/analyzer.h \
-    application.h \
     logs/refloggenerator.h \
     video/smartvideodata.h \
-    video/smartvideodata_p.h
+    video/smartvideodata_p.h \
+    manager/application.h \
+    algorithms/analyzer.h \
+    algorithms/searcher.h
 
 RESOURCES += qml.qrc
 
@@ -65,4 +64,5 @@ DISTFILES += \
     demonstration/windows/RefLogGeneratorWindow.qml \
     demonstration/components/StrobeDrawComponent.qml \
     demonstration/views/AlgorithmRunnerView.qml \
-    demonstration/windows/AlgorithmRunnerWindow.qml
+    demonstration/windows/AlgorithmRunnerWindow.qml \
+    demonstration/components/SmartVideoComponent.qml

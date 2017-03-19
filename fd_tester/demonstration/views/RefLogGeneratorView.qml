@@ -9,18 +9,41 @@ import "../components"
 ColumnLayout{
     id: mainColumn
 
-    RefLogGenerator{ id: generator;}
+    RefLogGenerator{
+        id: generator;
+        onMessage: {
+            msgInfo.text = txt;
+            msgInfo.open()
+        }
+        currentFrame: video.position
+        videoFile: "/home/kostyan/Видео/digit_1.avi"
+    }
 
-    RowLayout{
-        id: titleRow
-        Layout.preferredWidth: parent.width*0.8
+    MessageDialog{
+        id: msgInfo
+        title: "Info"
+        standardButtons: StandardButton.Ok;
+        icon: StandardIcon.Information
+    }
+
+    TextField{
+        id: title
+        Layout.preferredWidth: parent.width*0.2
         Layout.alignment: Qt.AlignHCenter
-
-        Label{ text: "Log title:";}
-        TextArea{
-            id: title
-            Layout.preferredWidth: parent.width*0.8
-            Layout.preferredHeight: 25
+        anchors{
+            left: video.left
+            bottom: video.top
+            margins: 20
+        }
+        Layout.preferredHeight: 25
+        placeholderText: "Enter log title"
+        onTextChanged: generator.setTitle(text);
+        focus: true;
+        Keys.onPressed:{
+            if (event.key == Qt.Key_Enter-1) {
+                focus = false;
+                mainColumn.focus = true;
+            }
         }
     }
 
@@ -48,7 +71,6 @@ ColumnLayout{
         onRectChanged: console.log(videoRect)
     }
 
-
     VideoControlBar{
         id: controls
         duration: video.duration
@@ -62,6 +84,59 @@ ColumnLayout{
         onPause: video.pause()
         onPlay: video.play()
         onSeek: video.seek(pos)
+    }
+
+    RowLayout{
+        id: naviRow
+        Layout.alignment: Qt.AlignHCenter
+        anchors.top: controls.bottom
+        anchors.margins: 10
+        Button{
+            id: prevBtn
+            text: "<<"
+            enabled: generator.isWriting
+            onClicked: {
+                if (video.position > 0)
+                    video.seek(video.position-1)
+            }
+        }
+        Button{
+            id: nextBtn
+            text: ">>"
+            enabled: generator.isWriting
+            onClicked: {
+                generator.saveStrobe(strobe.getRealStrobe(), strobe.getAngle())
+                video.seek(video.position+1);
+            }
+        }
+    }
+
+    RowLayout{
+        id: controlRow
+        Layout.alignment: Qt.AlignHCenter
+        anchors.top: naviRow.bottom
+        anchors.margins: 10
+        Button{
+            id: startBtn
+            text: (generator.isWriting) ? "Stop & save"
+                                        : "Start"
+            onClicked: {
+                if (!generator.isWriting) {
+                    generator.firstFrame = video.position
+                    generator.startWriting()
+                }
+                else{
+                    generator.stopWriting()
+                    generator.saveLog()
+                }
+            }
+        }
+        Button{
+            id: clearBtn
+            text: "Clear strobe"
+            enabled: generator.isWriting
+            onClicked: strobe.updateStrobe(Qt.rect(0,0,0,0))
+        }
     }
 
     /*  $ key catcher $
@@ -79,7 +154,7 @@ ColumnLayout{
         down    = height--
       */
     focus: true;
-    Keys.onPressed: strobe.keyReact(event.key)
+    Keys.onPressed: strobe.keyReact(event.key);
     Keys.onReleased: strobe.keyReact(event.key, event.key == Qt.Key_Shift)
     // key catcher end
 }

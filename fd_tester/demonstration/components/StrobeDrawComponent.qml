@@ -24,6 +24,10 @@ Item {
         return d.screenToVideo(selection)
     }
 
+    function getAngle(){
+        return rot.angle
+    }
+
     function checkSelection(){
         // check if our strobe is beyond the limits
         var sin = Math.sin(rot.angle*Math.PI/180);
@@ -49,6 +53,9 @@ Item {
     }
 
     function keyReact(key, abort){
+        if (d.isNoStrobe())
+            return;
+
         var diff = (abort) ? -1 : 1;
 
         if(key == Qt.Key_Shift)
@@ -135,6 +142,11 @@ Item {
 
             return newRect
         }
+
+        function isNoStrobe() {
+            return (selection.x == 0 && selection.width == 0 &&
+                    selection.y == 0 && selection.height == 0)
+        }
     }
 
     MouseArea{
@@ -184,7 +196,7 @@ Item {
         }
     }
 
-    Rotation{ id: rot;}
+    Rotation{ id: rot; angle: 0}
 
     Rectangle{
         id: selection

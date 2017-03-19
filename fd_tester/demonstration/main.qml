@@ -27,12 +27,6 @@ ApplicationWindow{
 
         Menu{
             title: qsTr("File")
-
-            MenuItem{
-                text: qsTr("Clean up")
-                shortcut: "Ctrl+C"
-            }
-
             MenuItem{
                 text: qsTr("Quit")
                 shortcut: "Ctrl+Q"
@@ -46,12 +40,17 @@ ApplicationWindow{
                 text: qsTr("About")
                 onTriggered: about.open()
             }
+            MenuItem{
+                text: qsTr("About Qt")
+                onTriggered: mainObj.aboutQt()
+            }
         }
     }
 
     MessageDialog{
         id: about
         title: qsTr("About")
+        icon: StandardIcon.Information
         text: qsTr("Awesome application
 for testing feature detectors.
 Create you own reference logs and

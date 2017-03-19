@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QMessageBox>
 
 #include "manager.h"
 
@@ -17,6 +18,7 @@ public:
     Q_INVOKABLE QStringList logs(){return Manager::instance()->logs();}
     Q_INVOKABLE QString logFilesPath(){return pManager->logsPath();}
     Q_INVOKABLE QStringList algorithms(){return alg::algToString;}
+    Q_INVOKABLE void aboutQt(){return QMessageBox::aboutQt(nullptr);}
 
     enum Algs
     {

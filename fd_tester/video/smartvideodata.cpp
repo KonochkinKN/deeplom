@@ -66,14 +66,13 @@ void SmartVideoData::setTemplateImage(QString imgPath)
 }
 
 void SmartVideoData::startDetecting()
-{
+{    
     this->mConnection = QObject::connect(pSearcher, &Searcher::detected, [=]
     {
-        this->pTimer->singleShot(100, this, &SmartVideoData::onDetected);
+        this->pTimer->singleShot(1, this, &SmartVideoData::onDetected);
     });
 
-    connect(pSearcher, &Searcher::error,
-            this, &SmartVideoData::message);
+    connect(pSearcher, &Searcher::error, this, &SmartVideoData::message);
 
     this->mIsDetecting = true;
     emit isDetectingChanged(this->mIsDetecting);
@@ -86,8 +85,7 @@ void SmartVideoData::stopDetecting()
 {
     QObject::disconnect(mConnection);
 
-    disconnect(pSearcher, &Searcher::error,
-               this, &SmartVideoData::message);
+    disconnect(pSearcher, &Searcher::error, this, &SmartVideoData::message);
 
     this->mIsDetecting = false;
     emit isDetectingChanged(this->mIsDetecting);

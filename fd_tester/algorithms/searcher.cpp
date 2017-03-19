@@ -61,19 +61,58 @@ qint64 Searcher::getElapsedTime()
 
 void Searcher::detect()
 {
-    __print;
     if (mTemplate.empty())
     {
         emit error("Invalid template");
+        return;
     }
 
     if (mInputImg.empty())
     {
         emit error("Invalid input image");
+        return;
     }
 
-    cv::Ptr<cv::Feature2D> detector = new cv::SIFT(400);
-    cv::Ptr<cv::DescriptorMatcher> matcher = new cv::FlannBasedMatcher();
+    cv::Ptr<cv::Feature2D> detector;
+    cv::Ptr<cv::DescriptorMatcher> matcher;
+    switch(mAlgorithm)
+    {
+    case alg::ORB:
+    {
+        detector = new cv::ORB(500, 2);
+        matcher = new cv::BFMatcher(cv::NORM_HAMMING, true);
+        break;
+    }
+    case alg::ORB2:
+    {
+        detector = new cv::ORB(500, 2, 8, 31, 0, 4);
+        matcher = new cv::BFMatcher(cv::NORM_HAMMING2, true);
+        break;
+    }
+    case alg::SIFT:
+    {
+        detector = new cv::SIFT(400);
+        matcher = new cv::FlannBasedMatcher();
+        break;
+    }
+    case alg::SURF:
+    {
+        detector = new cv::SURF(400);
+        matcher = new cv::FlannBasedMatcher();
+        break;
+    }
+    case alg::BRISK:
+    {
+        detector = new cv::BRISK();
+        matcher = new cv::FlannBasedMatcher();
+        break;
+    }
+    default:
+    {
+        emit error("Unknown algorithm");
+        return;
+    }
+    }
 
     std::vector<cv::KeyPoint> tmpKeypoints;
     std::vector<cv::KeyPoint> imgKeypoints;
@@ -103,6 +142,12 @@ void Searcher::detect()
     {
         emit error(tr("OpenCV exception: %1").arg(e.what()));
         return;
+    }
+
+    if(mAlgorithm == alg::BRISK)
+    {
+        tmpDescriptors.convertTo(tmpDescriptors, CV_32F);
+        imgDescriptors.convertTo(imgDescriptors, CV_32F);
     }
     matcher->match(tmpDescriptors, imgDescriptors, matches);
 

@@ -160,7 +160,19 @@ void VideoData::onTimeout()
 void VideoData::onSourceChanged()
 {
     emit hasVideoChanged(false);
-    pCapture->open(QUrl(mSource).path().toStdString().c_str());
+
+    try
+    {
+        pCapture->open(QUrl(mSource).path().toStdString().c_str());
+    }
+    catch(cv::Exception& e)
+    {
+        this->updateData(true);
+        this->closeSurface();
+        __print << e.what();
+        return;
+    }
+
     emit hasVideoChanged(this->hasVideo());
 
     if (!pCapture->isOpened())

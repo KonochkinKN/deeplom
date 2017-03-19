@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QPair>
 #include <QObject>
-#include <QPolygon>
+#include <QPolygonF>
 
 #include "logheader.h"
 
@@ -19,14 +19,14 @@ public:
     virtual ~Logger();
 
     LogHeader readHeader();
-    QPair<QPolygon, qint64> readNextBlock();
+    QPair<QPolygonF, qint64> readNextBlock();
     QString fileAbsPath() const;
     bool atEnd() const;
     void close();
 
 public slots:
     bool writeHeader();
-    bool writeNextBlock(QPolygon strobe, qint64);
+    bool writeNextBlock(QPolygonF strobe, qint64);
 
 private:
     QFile mFile;
