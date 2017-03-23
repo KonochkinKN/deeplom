@@ -14,7 +14,7 @@ RefLogGenerator::RefLogGenerator(QObject *parent)
 
 RefLogGenerator::~RefLogGenerator()
 {
-    pLogger->deleteLater();
+    delete pLogger;
 }
 
 void RefLogGenerator::setTitle(QString data)
@@ -76,8 +76,10 @@ bool RefLogGenerator::isValid()
 
     if (mIsWriting)
         errMsg += "Writing is already started\n";
+
     if (mTitle.isEmpty())
         errMsg += "Title is not provided\n";
+
     if (mVideoFile.isEmpty())
         errMsg += "Video file is not provided\n";
 
@@ -85,7 +87,6 @@ bool RefLogGenerator::isValid()
         emit message("Some errors occured:\n" + errMsg);
 
    return errMsg.isEmpty();
-
 }
 
 void RefLogGenerator::saveStrobe(QRectF strobe, int angle)
@@ -160,5 +161,6 @@ void RefLogGenerator::saveLog()
 
     emit message(QString("File %1 saved succesfully!").
                  arg(pLogger->fileAbsPath()));
+
     pLogger->close();
 }

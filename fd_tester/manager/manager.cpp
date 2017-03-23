@@ -37,6 +37,18 @@ Manager::~Manager()
 
 }
 
+QString Manager::mission()
+{
+    QString ans = QObject::tr("This is an awesome application\n"
+                              "for testing feature detectors.\n"
+                              "Create you own reference logs and\n"
+                              "compare them with algorithm\'s output.\n"
+                              "Version: %1.")
+            .arg(QString::number(__version));
+
+    return ans;
+}
+
 QStringList Manager::logs()
 {
     QStringList allLogs;

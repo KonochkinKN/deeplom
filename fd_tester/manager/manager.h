@@ -20,12 +20,22 @@ const QStringList algToString({"None", "ORB", "ORB2",
                                "SIFT", "SURF", "BRISK"});
 }
 
+namespace mng
+{
+enum FileTypes
+{
+    VideoFile,
+    ObjectFile
+};
+}
+
 class Manager
 {
 public:
     static Manager* instance();
     static void destroy();
 
+    QString mission();
     QString logsDir(){return "logs";}
     QString logFilesExtension(){return ".log";}
     QString logsPath(){return mDataLocation.arg(this->logsDir());}

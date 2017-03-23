@@ -15,10 +15,11 @@ public:
     explicit Application(QObject *parent = 0);
     virtual ~Application();
 
-    Q_INVOKABLE QStringList logs(){return Manager::instance()->logs();}
+    Q_INVOKABLE QStringList logs(){return pManager->logs();}
     Q_INVOKABLE QString logFilesPath(){return pManager->logsPath();}
     Q_INVOKABLE QStringList algorithms(){return alg::algToString;}
     Q_INVOKABLE void aboutQt(){return QMessageBox::aboutQt(nullptr);}
+    Q_INVOKABLE QString mission(){return pManager->mission();}
 
     enum Algs
     {

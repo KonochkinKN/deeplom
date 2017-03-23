@@ -8,6 +8,11 @@ import "../components"
 
 ColumnLayout{
     id: mainColumn
+    signal close()
+
+    Storage{ id: storage;}
+
+    Component.onCompleted: videoFile.update()
 
     RefLogGenerator{
         id: generator;
@@ -16,27 +21,37 @@ ColumnLayout{
             msgInfo.open()
         }
         currentFrame: video.position
-        videoFile: "/home/kostyan/Видео/digit_1.avi"
+        videoFile: videoFile.filePath
     }
 
     MessageDialog{
         id: msgInfo
-        title: "Info"
+        title: qsTr("Info")
         standardButtons: StandardButton.Ok;
         icon: StandardIcon.Information
     }
 
+    MessageDialog{
+        id: closeDialog
+        title: qsTr("Closing comfirmation")
+        text: qsTr("Do you want to leave without saving?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        icon: StandardIcon.Question
+        onYes: mainColumn.close()
+    }
+
     TextField{
         id: title
+        enabled: !generator.isWriting
         Layout.preferredWidth: parent.width*0.2
         Layout.alignment: Qt.AlignHCenter
         anchors{
             left: video.left
             bottom: video.top
-            margins: 20
+            bottomMargin: 20
         }
         Layout.preferredHeight: 25
-        placeholderText: "Enter log title"
+        placeholderText: qsTr("Enter log title...")
         onTextChanged: generator.setTitle(text);
         focus: true;
         Keys.onPressed:{
@@ -47,9 +62,20 @@ ColumnLayout{
         }
     }
 
+    FileSelectionComponent{
+        id: videoFile
+        Layout.alignment: Qt.AlignHCenter
+        Layout.preferredWidth: video.width
+        title: qsTr("Video file selection")
+        dialogTitle: qsTr("Select a video")
+        name: Storage.VideoFile
+        listModel: storage.loadFilePaths(name)
+        enabled: !generator.isWriting
+    }
+
     VideoComponent{
         id: video
-        sourcePath: "/home/kostyan/Видео/digit_1.avi"
+        sourcePath: videoFile.filePath
         Layout.alignment: Qt.AlignCenter
         Layout.preferredWidth: video.hasVideo
                                ? Math.min(video.videoWidth, 640) : 640
@@ -68,11 +94,11 @@ ColumnLayout{
         y: video.contentRect.y + video.y
         width: video.contentRect.width
         height: video.contentRect.height
-        onRectChanged: console.log(videoRect)
     }
 
     VideoControlBar{
         id: controls
+        enabled: !generator.isWriting && video.hasVideo
         duration: video.duration
         anchors.left: video.left
         anchors.right: video.right
@@ -87,10 +113,28 @@ ColumnLayout{
     }
 
     RowLayout{
-        id: naviRow
+        id: detectRow
         Layout.alignment: Qt.AlignHCenter
         anchors.top: controls.bottom
         anchors.margins: 10
+
+        Button{
+            id: startBtn
+            enabled: video.hasVideo
+            text: (generator.isWriting) ? qsTr("Stop'n'save")
+                                        : qsTr("Start")
+            onClicked: {
+                if (!generator.isWriting) {
+                    generator.firstFrame = video.position
+                    generator.startWriting()
+                }
+                else{
+                    generator.stopWriting()
+                    storage.saveFilePath(videoFile.name, videoFile.filePath)
+                }
+            }
+        }
+
         Button{
             id: prevBtn
             text: "<<"
@@ -100,6 +144,14 @@ ColumnLayout{
                     video.seek(video.position-1)
             }
         }
+
+        Button{
+            id: clearBtn
+            text: qsTr("Clear strobe")
+            enabled: generator.isWriting
+            onClicked: strobe.updateStrobe(Qt.rect(0,0,0,0))
+        }
+
         Button{
             id: nextBtn
             text: ">>"
@@ -109,33 +161,19 @@ ColumnLayout{
                 video.seek(video.position+1);
             }
         }
-    }
 
-    RowLayout{
-        id: controlRow
-        Layout.alignment: Qt.AlignHCenter
-        anchors.top: naviRow.bottom
-        anchors.margins: 10
         Button{
-            id: startBtn
-            text: (generator.isWriting) ? "Stop & save"
-                                        : "Start"
+            id: closeBtn
+            text: qsTr("Close")
+            Layout.alignment: Qt.AlignHCenter
+            anchors.margins: 10
             onClicked: {
-                if (!generator.isWriting) {
-                    generator.firstFrame = video.position
-                    generator.startWriting()
+                if (generator.isWriting){
+                    closeDialog.open()
                 }
-                else{
-                    generator.stopWriting()
-                    generator.saveLog()
-                }
+                else
+                    mainColumn.close()
             }
-        }
-        Button{
-            id: clearBtn
-            text: "Clear strobe"
-            enabled: generator.isWriting
-            onClicked: strobe.updateStrobe(Qt.rect(0,0,0,0))
         }
     }
 

@@ -44,9 +44,7 @@ public slots:
     void setVideoFile(QString data);
     void setFirstFrame(quint32 data);
     void setCurrentFrame(quint32 data);
-
     void saveStrobe(QRectF strobe, int angle);
-    void saveLog();
 
 private:
     bool mIsWriting;
@@ -56,6 +54,8 @@ private:
     quint32 mCurrentFrame;
     QList <QPolygonF> mDataList;
     Logger* pLogger;
+
+    void saveLog();
 
 };
 

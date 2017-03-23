@@ -51,10 +51,7 @@ ApplicationWindow{
         id: about
         title: qsTr("About")
         icon: StandardIcon.Information
-        text: qsTr("Awesome application
-for testing feature detectors.
-Create you own reference logs and
-compare them with algorithm\'s output.")
+        Component.onCompleted: text = mainObj.mission();
     }
 
     menuBar: menu
