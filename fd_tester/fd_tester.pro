@@ -42,7 +42,6 @@ HEADERS += \
     logs/logheader.h \
     logs/refloggenerator.h \
     video/smartvideodata.h \
-    video/smartvideodata_p.h \
     manager/application.h \
     algorithms/analyzer.h \
     algorithms/searcher.h \

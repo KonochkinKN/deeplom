@@ -61,7 +61,7 @@ void SmartVideoData::setAlgType(int type)
 
 void SmartVideoData::setTemplateImage(QString imgPath)
 {
-    this->mTemplate = imgPath;
+    this->mTemplate = QUrl(imgPath).path();
     emit templateImageChanged(this->mTemplate);
 }
 

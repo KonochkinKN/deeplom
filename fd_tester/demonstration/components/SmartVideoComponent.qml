@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtGraphicalEffects 1.0
+import QtQuick.Dialogs 1.2
 import QtMultimedia 5.0
 
 import awesome.app.fdt 1.0
@@ -61,9 +62,19 @@ VideoOutput{
         videoData.setTemplateImage(temp)
     }
 
+    MessageDialog{
+        id: msgInfo
+        title: qsTr("Info")
+        standardButtons: StandardButton.Ok;
+        icon: StandardIcon.Information
+    }
+
     SmartVideoData{
         id: videoData;
-        onMessage: console.log("MESSAGE:", txt)
+        onMessage: {
+            msgInfo.text = txt
+            msgInfo.open()
+        }
     }
 
     LinearGradient{

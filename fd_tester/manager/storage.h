@@ -20,8 +20,8 @@ public:
 
     enum Files
     {
-        VideoFile = mng::VideoFile,
-        ObjectFile = mng::ObjectFile
+        VideoFile   = mng::VideoFile,
+        ObjectFile  = mng::ObjectFile
     };
 
     Q_ENUMS(Files)
