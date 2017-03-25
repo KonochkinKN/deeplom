@@ -49,14 +49,14 @@ void Searcher::setAlgorithm(int alg)
     mResultImg.release();
 }
 
-cv::Mat Searcher::getResult()
+cv::Mat Searcher::getResult() const
 {
-    return mResultImg;
+    return this->mResultImg;
 }
 
-qint64 Searcher::getElapsedTime()
+qint64 Searcher::getElapsedTime() const
 {
-    return mElapsedTime;
+    return this->mElapsedTime;
 }
 
 void Searcher::detect()
@@ -72,6 +72,8 @@ void Searcher::detect()
         emit error("Invalid input image");
         return;
     }
+
+    mCurrentStrobe.clear();
 
     cv::Ptr<cv::Feature2D> detector;
     cv::Ptr<cv::DescriptorMatcher> matcher;
@@ -197,6 +199,11 @@ void Searcher::detect()
             line(mResultImg, scene_corners.at(1), scene_corners.at(2), cv::Scalar(0, 255, 0), 2 );
             line(mResultImg, scene_corners.at(2), scene_corners.at(3), cv::Scalar(0, 255, 0), 2 );
             line(mResultImg, scene_corners.at(3), scene_corners.at(0), cv::Scalar(0, 255, 0), 2 );
+
+            mCurrentStrobe.append(QPointF(scene_corners.at(0).x, scene_corners.at(0).y));
+            mCurrentStrobe.append(QPointF(scene_corners.at(1).x, scene_corners.at(1).y));
+            mCurrentStrobe.append(QPointF(scene_corners.at(2).x, scene_corners.at(2).y));
+            mCurrentStrobe.append(QPointF(scene_corners.at(3).x, scene_corners.at(3).y));
         }
     }
     mElapsedTime = timer->elapsed();
@@ -206,4 +213,9 @@ void Searcher::detect()
     detector.release();
     matcher.release();
     emit detected();
+}
+
+QPolygonF Searcher::getStrobe() const
+{
+    return this->mCurrentStrobe;
 }

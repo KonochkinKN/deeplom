@@ -11,5 +11,7 @@
         <file>demonstration/views/AlgorithmRunnerView.qml</file>
         <file>demonstration/components/SmartVideoComponent.qml</file>
         <file>demonstration/components/FileSelectionComponent.qml</file>
+        <file>design/icon.png</file>
+        <file>design/logo.png</file>
     </qresource>
 </RCC>

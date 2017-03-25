@@ -2,6 +2,7 @@
 #define SEARCHER_H
 
 #include <QObject>
+#include <QPolygonF>
 
 #include <opencv/cv.h>
 
@@ -15,8 +16,9 @@ public:
 
 public slots:
     void detect();
-    cv::Mat getResult();
-    qint64 getElapsedTime();
+    cv::Mat getResult() const;
+    QPolygonF getStrobe() const;
+    qint64 getElapsedTime() const;
     void setAlgorithm(int alg);
     void setTemplate(QString path);
     void setInputImage(cv::Mat image);
@@ -28,6 +30,7 @@ signals:
 private:
     int mAlgorithm;
     qint64 mElapsedTime;
+    QPolygonF mCurrentStrobe;
 
     cv::Mat mTemplate;
     cv::Mat mInputImg;

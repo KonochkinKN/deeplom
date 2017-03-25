@@ -2,6 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QtQml>
 #include <QCommandLineParser>
+#include <QIcon>
+#include <QDebug>
 
 #include "application.h"
 #include "videodata.h"
@@ -17,6 +19,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("AWESOME");
     QCoreApplication::setOrganizationDomain("AWESOME.KOSTYAN@Ya.com");
     QCoreApplication::setApplicationVersion(QString::number(__version));
+    app.setWindowIcon(QIcon(":/design/icon.png"));
 
     QCommandLineParser parser;
     parser.addHelpOption();

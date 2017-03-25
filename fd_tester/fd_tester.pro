@@ -15,6 +15,8 @@ LIBS += -ldl \
         -lopencv_flann \
         -lopencv_nonfree
 
+ICON = hicolor/32x32/pisos.png
+
 INCLUDEPATH += \
     manager \
     video \

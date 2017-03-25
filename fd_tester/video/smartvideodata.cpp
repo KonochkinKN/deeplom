@@ -17,6 +17,7 @@ SmartVideoData::SmartVideoData(QObject *parent)
     : VideoData(parent)
     , mAlgType(alg::None)
     , pTimer(new QTimer())
+    , pLogger(nullptr)
     , mIsDetecting(false)
     , pSearcher(new Searcher())
 {
@@ -25,6 +26,7 @@ SmartVideoData::SmartVideoData(QObject *parent)
 
 SmartVideoData::~SmartVideoData()
 {
+    delete pLogger;
     pTimer->deleteLater();
     pSearcher->deleteLater();
 }
@@ -66,7 +68,17 @@ void SmartVideoData::setTemplateImage(QString imgPath)
 }
 
 void SmartVideoData::startDetecting()
-{    
+{
+    delete pLogger;
+    pLogger = new Logger(alg::algToString.at(this->mAlgType), this->mAlgType,
+                         this->position(), this->mSource);
+
+    if (!this->pLogger->writeHeader())
+    {
+        emit message(tr("Error occured: Unable to log"));
+        return;
+    }
+
     this->mConnection = QObject::connect(pSearcher, &Searcher::detected, [=]
     {
         this->pTimer->singleShot(1, this, &SmartVideoData::onDetected);
@@ -83,12 +95,15 @@ void SmartVideoData::startDetecting()
 
 void SmartVideoData::stopDetecting()
 {
-    QObject::disconnect(mConnection);
+    this->pLogger->close();
 
+    QObject::disconnect(mConnection);
     disconnect(pSearcher, &Searcher::error, this, &SmartVideoData::message);
 
     this->mIsDetecting = false;
     emit isDetectingChanged(this->mIsDetecting);
+
+    emit message(tr("Log saved succesfully"));
 }
 
 void SmartVideoData::detect()
@@ -114,6 +129,14 @@ void SmartVideoData::onDetected()
 
     if(frame.empty())
         return;
+
+    if (!this->pLogger->writeNextBlock(this->pSearcher->getStrobe(),
+                                       this->pSearcher->getElapsedTime()))
+    {
+        emit message(tr("Error occured: Unable to lor result"));
+        this->stopDetecting();
+        return;
+    }
 
     cv::cvtColor(frame, frame, CV_RGB2RGBA, 4);
 

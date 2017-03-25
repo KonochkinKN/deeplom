@@ -12,8 +12,7 @@ import "windows"
 ApplicationWindow{
     id: mainView
     objectName: "mainView"
-
-    title: qsTr("algorithm tester")
+    title: qsTr("Algorithm tester")
     width: 300
     height: 150
     visible: true

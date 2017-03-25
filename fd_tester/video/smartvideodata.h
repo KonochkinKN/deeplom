@@ -3,6 +3,7 @@
 
 #include "videodata.h"
 #include "searcher.h"
+#include "logger.h"
 
 #include <QMetaObject>
 #include <QObject>
@@ -51,8 +52,9 @@ signals:
 private:
     int mAlgType;
     QTimer* pTimer;
-    bool mIsDetecting;
+    Logger* pLogger;
     QString mTemplate;
+    bool mIsDetecting;
     QMetaObject::Connection mConnection;
 
     Searcher* pSearcher;

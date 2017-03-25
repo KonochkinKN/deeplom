@@ -108,6 +108,7 @@ bool Logger::writeNextBlock(QPolygonF strobe, qint64 delay)
     QDataStream in(&mFile);
     in << strobe;
     in << delay;
+
     return (in.status() == QDataStream::Ok);
 }
 
