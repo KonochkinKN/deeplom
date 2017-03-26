@@ -12,8 +12,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/core/types_c.h>
 #include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/features2d/features2d.hpp>
 #include <opencv2/nonfree/features2d.hpp>
+#include <opencv2/features2d/features2d.hpp>
 
 namespace
 {
@@ -61,19 +61,20 @@ qint64 Searcher::getElapsedTime() const
 
 void Searcher::detect()
 {
+    mElapsedTime = 0;
+    mCurrentStrobe.clear();
+
     if (mTemplate.empty())
     {
-        emit error("Invalid template");
+        emit error(tr("Invalid template"));
         return;
     }
 
     if (mInputImg.empty())
     {
-        emit error("Invalid input image");
+        emit error(tr("Invalid input image"));
         return;
     }
-
-    mCurrentStrobe.clear();
 
     cv::Ptr<cv::Feature2D> detector;
     cv::Ptr<cv::DescriptorMatcher> matcher;
@@ -111,7 +112,7 @@ void Searcher::detect()
     }
     default:
     {
-        emit error("Unknown algorithm");
+        emit error(tr("Unknown algorithm"));
         return;
     }
     }
@@ -207,8 +208,8 @@ void Searcher::detect()
         }
     }
     mElapsedTime = timer->elapsed();
-    if(mElapsedTime < 100)
-        QThread::msleep(100 - mElapsedTime);
+    if(mElapsedTime < 50)
+        QThread::msleep(50 - mElapsedTime);
 
     detector.release();
     matcher.release();

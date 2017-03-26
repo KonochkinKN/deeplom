@@ -43,7 +43,7 @@ bool SmartVideoData::isDetecting()
 
 qint64 SmartVideoData::iterationTime()
 {
-    return this->pSearcher->getElapsedTime();
+    return this->mIterationTime;
 }
 
 QString SmartVideoData::templateImage()
@@ -85,6 +85,7 @@ void SmartVideoData::startDetecting()
     });
 
     connect(pSearcher, &Searcher::error, this, &SmartVideoData::message);
+    connect(pSearcher, &Searcher::error, this, &SmartVideoData::stopDetect);
 
     this->mIsDetecting = true;
     emit isDetectingChanged(this->mIsDetecting);
@@ -95,13 +96,7 @@ void SmartVideoData::startDetecting()
 
 void SmartVideoData::stopDetecting()
 {
-    this->pLogger->close();
-
-    QObject::disconnect(mConnection);
-    disconnect(pSearcher, &Searcher::error, this, &SmartVideoData::message);
-
-    this->mIsDetecting = false;
-    emit isDetectingChanged(this->mIsDetecting);
+    this->stopDetect();
 
     emit message(tr("Log saved succesfully"));
 }
@@ -133,7 +128,7 @@ void SmartVideoData::onDetected()
     if (!this->pLogger->writeNextBlock(this->pSearcher->getStrobe(),
                                        this->pSearcher->getElapsedTime()))
     {
-        emit message(tr("Error occured: Unable to lor result"));
+        emit message(tr("Error occured: Unable to log result"));
         this->stopDetecting();
         return;
     }
@@ -156,7 +151,26 @@ void SmartVideoData::onDetected()
     this->pSurface->present(vFrame);
 
     this->setPosition(this->mFrame + 1);
-    emit iterationTimeChanged(this->pSearcher->getElapsedTime());
+    this->setIterationTime(this->pSearcher->getElapsedTime());
 
     this->detect();
+}
+
+void SmartVideoData::stopDetect()
+{
+    this->pLogger->close();
+
+    QObject::disconnect(mConnection);
+    disconnect(pSearcher, &Searcher::error, this, &SmartVideoData::message);
+
+    this->setIterationTime(0);
+
+    this->mIsDetecting = false;
+    emit isDetectingChanged(this->mIsDetecting);
+}
+
+void SmartVideoData::setIterationTime(qint64 time)
+{
+    this->mIterationTime = time;
+    emit iterationTimeChanged(this->mIterationTime);
 }

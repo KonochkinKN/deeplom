@@ -15,8 +15,6 @@ LIBS += -ldl \
         -lopencv_flann \
         -lopencv_nonfree
 
-ICON = hicolor/32x32/pisos.png
-
 INCLUDEPATH += \
     manager \
     video \
@@ -32,10 +30,10 @@ SOURCES += main.cpp \
     logs/logger.cpp \
     logs/refloggenerator.cpp \
     video/smartvideodata.cpp \
-    manager/application.cpp \
     algorithms/analyzer.cpp \
     algorithms/searcher.cpp \
-    manager/storage.cpp
+    manager/storage.cpp \
+    manager/qmlmanager.cpp
 
 HEADERS += \
     manager/manager.h \
@@ -44,10 +42,10 @@ HEADERS += \
     logs/logheader.h \
     logs/refloggenerator.h \
     video/smartvideodata.h \
-    manager/application.h \
     algorithms/analyzer.h \
     algorithms/searcher.h \
-    manager/storage.h
+    manager/storage.h \
+    manager/qmlmanager.h
 
 RESOURCES += qml.qrc
 

@@ -13,14 +13,14 @@ RowLayout{
     signal close();
 
     function init(){
-        video.setAlgorithm(1)
+        video.setAlgorithm(QmlManager.ORB)
         videoFile.update()
         objectFile.update()
     }
 
     Component.onCompleted: init();
 
-    Application{ id: app;}
+    QmlManager{ id: man;}
 
     Storage{ id: storage;}
 
@@ -157,7 +157,7 @@ RowLayout{
                 Column{
                     Repeater{
                         id: algList
-                        model: app.algorithms().slice(1);
+                        model: man.algorithms().slice(1);
 
                         RadioButton{
                             text: modelData

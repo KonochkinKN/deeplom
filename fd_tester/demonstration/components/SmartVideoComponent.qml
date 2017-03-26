@@ -52,7 +52,6 @@ VideoOutput{
 
     function stopDetecting(){
         videoData.stopDetecting();
-        iterationTime = 0
         videoData.position = 0
         videoData.seek(0)
     }

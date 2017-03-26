@@ -12,23 +12,44 @@ Rectangle {
     ColumnLayout{
         anchors.fill: parent
 
+        Image{
+            id: logo
+            Layout.alignment: Qt.AlignHCenter
+            fillMode: Image.PreserveAspectFit
+            source: "qrc:/design/logo.png"
+        }
+
         Button{
-            text: "Create reference logs"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            id: refBtn
+            anchors{
+                top: logo.bottom
+                topMargin: 10
+            }
+            text: qsTr("Create reference logs")
+            Layout.alignment: Qt.AlignHCenter
             onClicked: Qt.createQmlObject('RefLogGeneratorWindow{
                                             visible: true}', mainView)
         }
 
         Button{
-            text: "Create testing logs"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            id: testBtn
+            anchors{
+                top: refBtn.bottom
+                topMargin: 10
+            }
+            text: qsTr("Create testing logs")
+            Layout.alignment: Qt.AlignHCenter
             onClicked:  Qt.createQmlObject('AlgorithmRunnerWindow{
                                             visible: true}', mainView)
         }
 
         Button{
-            text: "Analyze"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            anchors{
+                top: testBtn.bottom
+                topMargin: 10
+            }
+            text: qsTr("Analyze")
+            Layout.alignment: Qt.AlignHCenter
             onClicked: console.log("Nope!")
         }
     }

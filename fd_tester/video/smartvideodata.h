@@ -40,6 +40,8 @@ public slots:
 private slots:
     void detect();
     void onDetected();
+    void stopDetect();
+    void setIterationTime(qint64 time);
 
 signals:
     void detected();
@@ -55,6 +57,7 @@ private:
     Logger* pLogger;
     QString mTemplate;
     bool mIsDetecting;
+    qint64 mIterationTime;
     QMetaObject::Connection mConnection;
 
     Searcher* pSearcher;

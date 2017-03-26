@@ -5,7 +5,7 @@
 #include <QIcon>
 #include <QDebug>
 
-#include "application.h"
+#include "qmlmanager.h"
 #include "videodata.h"
 #include "refloggenerator.h"
 #include "smartvideodata.h"
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Storage>("awesome.app.fdt", 1, 0, "Storage");
     qmlRegisterType<Analyzer>("awesome.app.fdt", 1, 0, "Analyzer");
     qmlRegisterType<VideoData>("awesome.app.fdt", 1, 0, "VideoData");
-    qmlRegisterType<Application>("awesome.app.fdt", 1, 0, "Application");
+    qmlRegisterType<QmlManager>("awesome.app.fdt", 1, 0, "QmlManager");
     qmlRegisterType<SmartVideoData>("awesome.app.fdt", 1, 0, "SmartVideoData");
     qmlRegisterType<RefLogGenerator>("awesome.app.fdt", 1, 0, "RefLogGenerator");
 
