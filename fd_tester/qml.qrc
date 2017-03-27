@@ -13,5 +13,9 @@
         <file>demonstration/components/FileSelectionComponent.qml</file>
         <file>design/icon.png</file>
         <file>design/logo.png</file>
+        <file>demonstration/windows/AnalyzerWindow.qml</file>
+        <file>demonstration/views/AnalyzerView.qml</file>
+        <file>demonstration/components/CompareVideoComponent.qml</file>
+        <file>demonstration/components/CustomListView.qml</file>
     </qresource>
 </RCC>

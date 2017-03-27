@@ -11,6 +11,7 @@
 #include "smartvideodata.h"
 #include "analyzer.h"
 #include "storage.h"
+#include "comparevideodata.h"
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<QmlManager>("awesome.app.fdt", 1, 0, "QmlManager");
     qmlRegisterType<SmartVideoData>("awesome.app.fdt", 1, 0, "SmartVideoData");
     qmlRegisterType<RefLogGenerator>("awesome.app.fdt", 1, 0, "RefLogGenerator");
+    qmlRegisterType<CompareVideoData>("awesome.app.fdt", 1, 0, "CompareVideoData");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QLatin1String("qrc:/demonstration/main.qml")));

@@ -28,7 +28,7 @@ void Analyzer::setRefLog(QString title)
 
     if(!file.exists())
     {
-        emit message("No such reference log");
+        emit message(tr("No such reference log"));
         return;
     }
 
@@ -50,7 +50,7 @@ void Analyzer::setLogForTest(QString title)
 
     if(!file.exists())
     {
-        emit message("No such reference log");
+        emit message(tr("No such testing log"));
         return;
     }
 
@@ -68,13 +68,13 @@ void Analyzer::analyze()
     // check files
     if(mRefLogFile.isEmpty())
     {
-        emit message("No reference log file provided");
+        emit message(tr("No reference log file provided"));
         return;
     }
 
     if(mLogForTestTitle.isEmpty())
     {
-        emit message("No log fr test file provided");
+        emit message(tr("No log for test file provided"));
         return;
     }
 
@@ -87,7 +87,7 @@ void Analyzer::analyze()
     // check headers
     if(!refHeader.isReference() || !refHeader.isValid())
     {
-        emit message("Invalid reference log file provided");
+        emit message(tr("Invalid reference log file provided"));
         refReader->close();
         logReader->close();
         refReader->deleteLater();
@@ -97,7 +97,7 @@ void Analyzer::analyze()
 
     if(logHeader.isReference() || !logHeader.isValid())
     {
-        emit message("Invalid log for test file provided");
+        emit message(tr("Invalid log for test file provided"));
         refReader->close();
         logReader->close();
         refReader->deleteLater();
@@ -117,7 +117,7 @@ void Analyzer::analyze()
 
     if(refData.isEmpty())
     {
-        emit message("Empty reference log");
+        emit message(tr("Empty reference log"));
         logReader->close();
         refReader->deleteLater();
         logReader->deleteLater();
@@ -126,7 +126,7 @@ void Analyzer::analyze()
 
     if(refFrame + refData.size() < logFrame)
     {
-        emit message("Logs are incomparable");
+        emit message(tr("Logs are incomparable"));
         logReader->close();
         refReader->deleteLater();
         logReader->deleteLater();
@@ -140,7 +140,7 @@ void Analyzer::analyze()
 
     if(logData.isEmpty())
     {
-        emit message("Empty log for test");
+        emit message(tr("Empty log for test"));
         refReader->deleteLater();
         logReader->deleteLater();
         return;
@@ -148,7 +148,7 @@ void Analyzer::analyze()
 
     if(logFrame + logData.size() < refFrame)
     {
-        emit message("Logs are incomparable");
+        emit message(tr("Logs are incomparable"));
         refReader->deleteLater();
         logReader->deleteLater();
         return;

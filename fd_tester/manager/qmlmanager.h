@@ -21,6 +21,9 @@ public:
     Q_INVOKABLE QStringList algorithms();
     Q_INVOKABLE void logsPathToClipBoard();
 
+    Q_INVOKABLE QString cleanLogs();
+    Q_INVOKABLE QString cleanInvalidLogs();
+
     enum Algs
     {
         None    = alg::None,

@@ -39,7 +39,7 @@ Rectangle {
             }
             text: qsTr("Create testing logs")
             Layout.alignment: Qt.AlignHCenter
-            onClicked:  Qt.createQmlObject('AlgorithmRunnerWindow{
+            onClicked: Qt.createQmlObject('AlgorithmRunnerWindow{
                                             visible: true}', mainView)
         }
 
@@ -50,7 +50,8 @@ Rectangle {
             }
             text: qsTr("Analyze")
             Layout.alignment: Qt.AlignHCenter
-            onClicked: console.log("Nope!")
+            onClicked: Qt.createQmlObject('AnalyzerWindow{
+                                            visible: true}', mainView)
         }
     }
 }

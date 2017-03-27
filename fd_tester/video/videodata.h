@@ -82,7 +82,7 @@ protected:
     int mHeight;
 
     void closeSurface();
-    void timerEvent(QTimerEvent*) override;
+    virtual void timerEvent(QTimerEvent*) override;
 };
 
 #endif // VIDEODATA_H

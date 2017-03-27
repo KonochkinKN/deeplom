@@ -10,7 +10,7 @@ Window{
     width: 1200
     height: 800
     color: "#95500C"
-    title: qsTr("Alrotithms")
+    title: qsTr("Analyze")
     modality: Qt.ApplicationModal
 
     property bool closeWindow: false
@@ -24,7 +24,7 @@ Window{
 
     onClosing: close.accepted = closeWindow
 
-    AlgorithmRunnerView{
+    AnalyzerView{
         id: runView
         anchors.fill: parent
         onClose: {

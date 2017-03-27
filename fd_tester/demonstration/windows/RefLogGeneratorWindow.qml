@@ -10,7 +10,7 @@ Window{
     width: 1200
     height: 800
     color: "#95500C"
-    title: "Reference logs"
+    title: qsTr("Reference logs")
     modality: Qt.ApplicationModal
 
     property bool closeWindow: false

@@ -51,6 +51,13 @@ ApplicationWindow{
         Text{ text: qsTr("Logs path copied to clipboard");}
     }
 
+    MessageDialog{
+        id: msg
+        title: qsTr("Info")
+        standardButtons: StandardButton.Ok
+        icon: StandardIcon.Information
+    }
+
     MenuBar{
         id: menu
 
@@ -62,8 +69,20 @@ ApplicationWindow{
                 onTriggered: popup.open()
             }
             MenuItem{
-                text: qsTr("Clear invalid logs")
+                text: qsTr("Clear logs")
                 shortcut: "Ctrl+C"
+                onTriggered: {
+                    msg.text = mainObj.cleanLogs()
+                    msg.open()
+                }
+            }
+            MenuItem{
+                text: qsTr("Clear invalid logs")
+                shortcut: "Ctrl+I"
+                onTriggered: {
+                    msg.text = mainObj.cleanInvalidLogs()
+                    msg.open()
+                }
             }
             MenuItem{
                 text: qsTr("Quit")

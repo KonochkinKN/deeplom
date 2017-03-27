@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     algorithms/analyzer.cpp \
     algorithms/searcher.cpp \
     manager/storage.cpp \
-    manager/qmlmanager.cpp
+    manager/qmlmanager.cpp \
+    video/comparevideodata.cpp
 
 HEADERS += \
     manager/manager.h \
@@ -45,7 +46,8 @@ HEADERS += \
     algorithms/analyzer.h \
     algorithms/searcher.h \
     manager/storage.h \
-    manager/qmlmanager.h
+    manager/qmlmanager.h \
+    video/comparevideodata.h
 
 RESOURCES += qml.qrc
 
@@ -67,4 +69,8 @@ DISTFILES += \
     demonstration/views/AlgorithmRunnerView.qml \
     demonstration/windows/AlgorithmRunnerWindow.qml \
     demonstration/components/SmartVideoComponent.qml \
-    demonstration/components/FileSelectionComponent.qml
+    demonstration/components/FileSelectionComponent.qml \
+    demonstration/windows/AnalyzerWindow.qml \
+    demonstration/views/AnalyzerView.qml \
+    demonstration/components/CompareVideoComponent.qml \
+    demonstration/components/CustomListView.qml
