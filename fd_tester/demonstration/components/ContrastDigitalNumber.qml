@@ -1,7 +1,7 @@
 import QtQuick 2.0
 
 Item{
-    property int number
+    property int number: 0
     property string numberColor: "black"
     property string backgroundColor: "white"
 
@@ -14,6 +14,7 @@ Item{
     }
 
     Rectangle{
+        id: background
         color: backgroundColor
         anchors.fill: parent
 

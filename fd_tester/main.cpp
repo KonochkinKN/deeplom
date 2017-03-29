@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QCoreApplication::setApplicationName("fdt");
     QCoreApplication::setOrganizationName("AWESOME");
-    QCoreApplication::setOrganizationDomain("AWESOME.KOSTYAN@Ya.com");
+    QCoreApplication::setOrganizationDomain("awesome.kostyan@gmail.com");
     QCoreApplication::setApplicationVersion(QString::number(__version));
     app.setWindowIcon(QIcon(":/design/icon.png"));
 

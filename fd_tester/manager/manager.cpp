@@ -1,10 +1,11 @@
-#include "manager.h"
+﻿#include "manager.h"
 #include "logger.h"
 
 #include <QDir>
 #include <QObject>
 #include <QDebug>
 #include <QStringList>
+#include <QCoreApplication>
 
 // logsPath + logs.at(*) + logExt = logAbsPath
 // logsPath + logTitle_logDateTime + logExt = logAbsPath
@@ -40,12 +41,16 @@ Manager::~Manager()
 
 QString Manager::mission()
 {
-    QString ans = QObject::tr("This is an awesome application\n"
-                              "for testing feature detectors.\n"
-                              "Create you own reference logs and\n"
-                              "compare them with algorithm\'s output.\n"
-                              "Version: %1.")
-            .arg(QString::number(__version));
+    QString ans = QObject::tr("This is an <FONT COLOR='orange'><b>awesome"
+                              "</b></FONT COLOR> application<br/>"
+                              "for testing feature detectors.<br/>"
+                              "Create you own reference logs and<br/>"
+                              "compare them with algorithm\'s output."
+                              "<br/><br/><b>Version: %1.</b><br/><br/>"
+                              "On all questions please contact me at:<br/>"
+                              "<u><FONT COLOR='#41cd52'>%2</FONT COLOR></u>")
+            .arg(QCoreApplication::applicationVersion(),
+                 QCoreApplication::organizationDomain());
 
     return ans;
 }
