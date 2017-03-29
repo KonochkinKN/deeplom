@@ -19,6 +19,7 @@ SmartVideoData::SmartVideoData(QObject *parent)
     , pTimer(new QTimer())
     , pLogger(nullptr)
     , mIsDetecting(false)
+    , mIterationTime(0)
     , pSearcher(new Searcher())
 {
 

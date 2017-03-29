@@ -1,10 +1,14 @@
 #include "qmlmanager.h"
+#include "logheader.h"
+#include "logger.h"
 
 #include <QApplication>
 #include <QMessageBox>
 #include <QClipboard>
+#include <QDebug>
 #include <QFile>
 #include <QDir>
+#include <QUrl>
 
 QmlManager::QmlManager(QObject *parent)
     : QObject(parent)
@@ -91,4 +95,42 @@ QString QmlManager::cleanInvalidLogs()
     }
 
     return tr("Invalid logs deleted");
+}
+
+QStringList QmlManager::refLogsByVideo(QString video)
+{
+    QStringList res;
+    QStringList logs = this->pManager->logs();
+    QString path = this->pManager->logsPath() + "%1" +
+            this->pManager->logFilesExtension();
+
+    foreach (QString log, logs)
+    {
+        Logger* reader = new Logger(path.arg(log));
+        LogHeader header = reader->readHeader();
+
+        if (header.isReference() && header.videoFile == QUrl(video).toString())
+            res.append(log);
+    }
+
+    return res;
+}
+
+QStringList QmlManager::testLogsByVideo(QString video)
+{
+    QStringList res;
+    QStringList logs = this->pManager->logs();
+    QString path = this->pManager->logsPath() + "%1" +
+            this->pManager->logFilesExtension();
+
+    foreach (QString log, logs)
+    {
+        Logger* reader = new Logger(path.arg(log));
+        LogHeader header = reader->readHeader();
+
+        if (!header.isReference() && header.videoFile == QUrl(video).toString())
+            res.append(log);
+    }
+
+    return res;
 }

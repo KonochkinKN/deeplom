@@ -13,7 +13,8 @@ public:
     {}
 
     LogHeader(const LogHeader& rhs)
-        : title(rhs.title)
+        : version(rhs.version)
+        , title(rhs.title)
         , algorithmType(rhs.algorithmType)
         , logDateTime(rhs.logDateTime)
         , firstFrame(rhs.firstFrame)

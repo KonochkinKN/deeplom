@@ -73,4 +73,6 @@ DISTFILES += \
     demonstration/windows/AnalyzerWindow.qml \
     demonstration/views/AnalyzerView.qml \
     demonstration/components/CompareVideoComponent.qml \
-    demonstration/components/CustomListView.qml
+    demonstration/components/CustomListView.qml \
+    demonstration/components/AnalyzerComponent.qml \
+    demonstration/components/ContrastDigitalNumber.qml

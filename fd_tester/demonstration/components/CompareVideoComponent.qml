@@ -13,6 +13,8 @@ VideoOutput{
     fillMode: VideoOutput.PreserveAspectFit
 
     property string sourcePath
+    property string refLogFile
+    property string testLogFile
 
     property int position: videoData.position
     property bool hasVideo: videoData.hasVideo
@@ -23,6 +25,8 @@ VideoOutput{
     property bool playing: videoData.playing
 
     onSourcePathChanged: videoData.source = sourcePath;
+
+    signal paused()
 
     function seek(pos){
         videoData.seek(pos)
@@ -58,6 +62,8 @@ VideoOutput{
 
     CompareVideoData{
         id: videoData
+        refLog: refLogFile
+        testLog: testLogFile
         onMessage: {
             msgInfo.text = txt
             msgInfo.open()
@@ -77,17 +83,11 @@ VideoOutput{
         }
     }
 
-    Text{
-        text: video.position
-        color: "red"
-        font{
-            bold: true
-            pointSize: 15
-        }
+    ContrastDigitalNumber{
+        number: video.position
         anchors{
             top: parent.top
             right: parent.right
-            margins: 5
         }
     }
 }

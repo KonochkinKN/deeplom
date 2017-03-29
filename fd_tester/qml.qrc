@@ -17,5 +17,8 @@
         <file>demonstration/views/AnalyzerView.qml</file>
         <file>demonstration/components/CompareVideoComponent.qml</file>
         <file>demonstration/components/CustomListView.qml</file>
+        <file>demonstration/components/AnalyzerComponent.qml</file>
+        <file>design/LCDNova.ttf</file>
+        <file>demonstration/components/ContrastDigitalNumber.qml</file>
     </qresource>
 </RCC>

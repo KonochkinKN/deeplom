@@ -21,6 +21,9 @@ void Analyzer::setRefLog(QString title)
     mRefLogFile = "";
     mRefLogTitle = "";
 
+    if (title.isEmpty())
+        return;
+
     QString absPath = Manager::instance()->logsPath() + title +
             Manager::instance()->logFilesExtension();
 
@@ -43,6 +46,9 @@ void Analyzer::setLogForTest(QString title)
     mLogForTestFile = "";
     mLogForTestTitle = "";
 
+    if (title.isEmpty())
+        return;
+
     QString absPath = Manager::instance()->logsPath() + title +
             Manager::instance()->logFilesExtension();
 
@@ -62,95 +68,81 @@ void Analyzer::setLogForTest(QString title)
 
 void Analyzer::analyze()
 {
-    mResult = "";
+    mResult.clear();
     emit resultChanged(mResult);
 
     // check files
-    if(mRefLogFile.isEmpty())
+    if (mRefLogFile.isEmpty())
     {
         emit message(tr("No reference log file provided"));
         return;
     }
 
-    if(mLogForTestTitle.isEmpty())
+    if (mLogForTestTitle.isEmpty())
     {
         emit message(tr("No log for test file provided"));
         return;
     }
 
+    // check and read ref log
     Logger* refReader = new Logger(mRefLogFile);
-    Logger* logReader = new Logger(mLogForTestFile);
-
     LogHeader refHeader = refReader->readHeader();
-    LogHeader logHeader = logReader->readHeader();
 
-    // check headers
-    if(!refHeader.isReference() || !refHeader.isValid())
+    if (!refHeader.isReference() || !refHeader.isValid())
     {
         emit message(tr("Invalid reference log file provided"));
-        refReader->close();
-        logReader->close();
-        refReader->deleteLater();
-        logReader->deleteLater();
+        delete refReader;
         return;
     }
 
-    if(logHeader.isReference() || !logHeader.isValid())
+    if (refReader->atEnd())
     {
-        emit message(tr("Invalid log for test file provided"));
-        refReader->close();
-        logReader->close();
-        refReader->deleteLater();
-        logReader->deleteLater();
+        emit message(tr("Empty reference log"));
+        delete refReader;
         return;
     }
 
     quint32 refFrame = refHeader.firstFrame;
-    quint32 logFrame = logHeader.firstFrame;
-    QList<QPair<QPolygonF, qint64>> refData, logData;
+    QList<QPair<QPolygonF, qint64>> refData;
 
-    // check data
     while(!refReader->atEnd())
         refData.append(refReader->readNextBlock());
 
     refReader->close();
+    delete refReader;
 
-    if(refData.isEmpty())
+    // check and read test log
+    Logger* logReader = new Logger(mLogForTestFile);
+    LogHeader logHeader = logReader->readHeader();
+
+    if (logHeader.isReference() || !logHeader.isValid())
     {
-        emit message(tr("Empty reference log"));
-        logReader->close();
-        refReader->deleteLater();
-        logReader->deleteLater();
+        emit message(tr("Invalid log for test file provided"));
+        delete logReader;
         return;
     }
 
-    if(refFrame + refData.size() < logFrame)
+    if (logReader->atEnd())
     {
-        emit message(tr("Logs are incomparable"));
-        logReader->close();
-        refReader->deleteLater();
-        logReader->deleteLater();
+        emit message(tr("Empty log for test"));
+        delete logReader;
         return;
     }
+
+    quint32 logFrame = logHeader.firstFrame;
+    QList<QPair<QPolygonF, qint64>> logData;
 
     while(!logReader->atEnd())
         logData.append(logReader->readNextBlock());
 
     logReader->close();
+    delete logReader;
 
-    if(logData.isEmpty())
-    {
-        emit message(tr("Empty log for test"));
-        refReader->deleteLater();
-        logReader->deleteLater();
-        return;
-    }
-
-    if(logFrame + logData.size() < refFrame)
+    // check data
+    if ((refFrame + refData.size() < logFrame) ||
+            (logFrame + logData.size() < refFrame))
     {
         emit message(tr("Logs are incomparable"));
-        refReader->deleteLater();
-        logReader->deleteLater();
         return;
     }
 
@@ -159,9 +151,7 @@ void Analyzer::analyze()
     //               (some way)                //
     //=========================================//
 
-    mResult = "100%!!!"; // must be full info
+    mResult.append("100%!!!"); // must be full info
+    mResult.append("Но это не точно");
     emit resultChanged(mResult);
-
-    refReader->deleteLater();
-    logReader->deleteLater();
 }

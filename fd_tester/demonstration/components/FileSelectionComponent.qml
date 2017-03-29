@@ -1,8 +1,8 @@
-import QtQuick 2.3
+import QtQuick 2.7
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls.Styles 1.3
 import Qt.labs.folderlistmodel 2.1
 
 GroupBox{
@@ -83,6 +83,7 @@ GroupBox{
             onCurrentIndexChanged: filePath = currentText;
 
             style: ComboBoxStyle{
+                renderType: Text.NativeRendering
                 dropDownButtonWidth: 5
                 selectedTextColor: "white"
                 selectionColor: "#31363B"

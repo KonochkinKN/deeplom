@@ -31,12 +31,17 @@ CompareVideoData::~CompareVideoData()
 
 void CompareVideoData::setRefLog(QString data)
 {
+    mRefStrobes.clear();
+
     this->stop();
     mIsValid = false;
     emit isValidChanged(mIsValid);
 
     mRefLog = data;
     emit refLogChanged(data);
+
+    if (mRefLog.isEmpty())
+        return;
 
     QStringList logs = Manager::instance()->logs();
     if (!logs.contains(mRefLog))
@@ -87,12 +92,17 @@ void CompareVideoData::setRefLog(QString data)
 
 void CompareVideoData::setTestLog(QString data)
 {
+    mTestStrobes.clear();
+
     this->stop();
     mIsValid = false;
     emit isValidChanged(mIsValid);
 
     mTestLog = data;
     emit testLogChanged(data);
+
+    if (mTestLog.isEmpty())
+        return;
 
     QStringList logs = Manager::instance()->logs();
     if (!logs.contains(mTestLog))

@@ -1,4 +1,5 @@
-import QtQuick 2.5
+import QtQuick 2.7
+import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtGraphicalEffects 1.0
 import QtQuick.Dialogs 1.2
@@ -92,31 +93,21 @@ VideoOutput{
         }
     }
 
-    Text{
-        text: video.position
-        color: "red"
-        font{
-            bold: true
-            pointSize: 15
-        }
+    ContrastDigitalNumber{
+        number: video.position
         anchors{
             top: parent.top
             right: parent.right
-            margins: 5
         }
     }
 
-    Text{
-        text: iterationTime
-        color: "yellow"
-        font{
-            bold: true
-            pointSize: 15
-        }
+    ContrastDigitalNumber{
+        number: iterationTime
+        numberColor: "white"
+        backgroundColor: "black"
         anchors{
             bottom: parent.bottom
             right: parent.right
-            margins: 5
         }
     }
 }

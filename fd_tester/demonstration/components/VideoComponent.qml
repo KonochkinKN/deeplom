@@ -59,17 +59,11 @@ VideoOutput{
         }
     }
 
-    Text{
-        text: video.position
-        color: "red"
-        font{
-            bold: true
-            pointSize: 15
-        }
+    ContrastDigitalNumber{
+        number: video.position
         anchors{
             top: parent.top
             right: parent.right
-            margins: 5
         }
     }
 }

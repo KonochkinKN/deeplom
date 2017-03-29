@@ -3,6 +3,7 @@
 
 #include <QDir>
 #include <QObject>
+#include <QDebug>
 #include <QStringList>
 
 // logsPath + logs.at(*) + logExt = logAbsPath

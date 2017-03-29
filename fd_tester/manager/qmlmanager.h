@@ -24,6 +24,9 @@ public:
     Q_INVOKABLE QString cleanLogs();
     Q_INVOKABLE QString cleanInvalidLogs();
 
+    Q_INVOKABLE QStringList refLogsByVideo(QString video);
+    Q_INVOKABLE QStringList testLogsByVideo(QString video);
+
     enum Algs
     {
         None    = alg::None,

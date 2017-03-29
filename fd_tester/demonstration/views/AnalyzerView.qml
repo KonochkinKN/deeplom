@@ -12,20 +12,67 @@ RowLayout{
 
     signal close();
 
+    Component.onCompleted: videoFile.update()
+
     QmlManager{ id: man;}
 
-    CustomListView{
-        id: list
-        title: "test"
-        listModel: {1; 2; 3; 4}
-        Layout.preferredWidth: 200
-        Layout.preferredHeight: parent.height*0.8
+    Storage{ id: storage;}
+
+    AnalyzerComponent{
+        id: analyzer
+        videoFile: videoFile.filePath
+        Layout.preferredHeight: parent.height*0.6
+        Layout.preferredWidth: 400
+        Layout.alignment: Qt.AlignHCenter
     }
 
-    Button{
-        id: closeBut
-        text: qsTr("Close")
-        Layout.alignment: Qt.AlignHCenter
-        onClicked: mainRow.close()
+    ColumnLayout{
+        FileSelectionComponent{
+            id: videoFile
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: video.width
+            title: qsTr("Video file selection")
+            dialogTitle: qsTr("Select a video")
+            name: Storage.VideoFile
+            listModel: storage.loadFilePaths(name)
+        }
+
+        CompareVideoComponent{
+            id: video
+            sourcePath: videoFile.filePath
+            refLogFile: analyzer.refLog
+            testLogFile: analyzer.testLog
+            Layout.alignment: Qt.AlignCenter
+            Layout.preferredWidth: video.hasVideo
+                                   ? Math.min(video.videoWidth, 640) : 640
+            Layout.preferredHeight: video.hasVideo
+                                    ? Math.min(video.videoHeight, 480) : 480
+
+            onPositionChanged: controls.position = video.position
+        }
+
+        VideoControlBar{
+            id: controls
+            enabled: !video.detecting
+            duration: video.duration
+            anchors.left: video.left
+            anchors.right: video.right
+            anchors.top: video.bottom
+            fps: video.fps
+            hasVideo: video.hasVideo
+            playing: video.playing
+            position: video.position
+            onPause: video.pause()
+            onPlay: video.play()
+            onSeek: video.seek(pos)
+        }
+
+
+        Button{
+            id: closeBut
+            text: qsTr("Close")
+            Layout.alignment: Qt.AlignHCenter
+            onClicked: mainRow.close()
+        }
     }
 }

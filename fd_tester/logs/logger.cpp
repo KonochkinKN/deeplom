@@ -10,6 +10,7 @@ Logger::Logger(QString title, quint32 algType, quint32 firstFrame,
 {
     mHeader.version = __version;
     mHeader.algorithmType = algType;
+    mHeader.title = title;
     mHeader.firstFrame = firstFrame;
     mHeader.videoFile = video;
     QString filePath = QString("%1%2_%3%4")
