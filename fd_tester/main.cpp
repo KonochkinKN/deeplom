@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.setApplicationDescription(Manager::instance()->mission());
+    parser.setApplicationDescription(Manager::instance()->consoleMission());
     parser.process(app);
 
     qmlRegisterType<Storage>("awesome.app.fdt", 1, 0, "Storage");

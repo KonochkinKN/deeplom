@@ -1,4 +1,5 @@
 #include "searcher.h"
+#include "polymath.h"
 #include "manager.h"
 
 #include <QList>
@@ -17,7 +18,7 @@
 
 namespace
 {
-const int MIN_DIST = 0.001;
+const float MIN_DIST = 0.001;
 }
 
 Searcher::Searcher(QObject *parent)
@@ -191,10 +192,11 @@ void Searcher::detect()
 
         cv::perspectiveTransform(obj_corners, scene_corners, H);
 
-        if(scene_corners.at(0).x < scene_corners.at(1).x &&
-                scene_corners.at(1).y < scene_corners.at(2).y &&
-                scene_corners.at(3).x < scene_corners.at(2).x &&
-                scene_corners.at(0).y < scene_corners.at(3).y)
+//        if(scene_corners.at(0).x < scene_corners.at(1).x &&
+//                scene_corners.at(1).y < scene_corners.at(2).y &&
+//                scene_corners.at(3).x < scene_corners.at(2).x &&
+//                scene_corners.at(0).y < scene_corners.at(3).y)
+        if (!PolyMath::instance()->cvIsSelfIntersecting(scene_corners))
         {
             line(mResultImg, scene_corners.at(0), scene_corners.at(1), cv::Scalar(0, 255, 0), 2 );
             line(mResultImg, scene_corners.at(1), scene_corners.at(2), cv::Scalar(0, 255, 0), 2 );

@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     algorithms/searcher.cpp \
     manager/storage.cpp \
     manager/qmlmanager.cpp \
-    video/comparevideodata.cpp
+    video/comparevideodata.cpp \
+    algorithms/polymath.cpp
 
 HEADERS += \
     manager/manager.h \
@@ -47,7 +48,8 @@ HEADERS += \
     algorithms/searcher.h \
     manager/storage.h \
     manager/qmlmanager.h \
-    video/comparevideodata.h
+    video/comparevideodata.h \
+    algorithms/polymath.h
 
 RESOURCES += qml.qrc
 

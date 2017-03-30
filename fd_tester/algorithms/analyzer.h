@@ -38,6 +38,8 @@ private:
     QString mRefLogTitle;
     QString mLogForTestFile;
     QString mLogForTestTitle;
+
+    void countEfficiency();
 };
 
 #endif // ANALYZER_H

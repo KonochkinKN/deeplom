@@ -36,6 +36,7 @@ public:
     static void destroy();
 
     QString mission();
+    QString consoleMission();
     QString logsDir(){return "logs";}
     QString logFilesExtension(){return ".log";}
     QString logsPath(){return mDataLocation.arg(this->logsDir());}

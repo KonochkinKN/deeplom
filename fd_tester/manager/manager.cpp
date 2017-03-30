@@ -55,6 +55,20 @@ QString Manager::mission()
     return ans;
 }
 
+QString Manager::consoleMission()
+{
+    QString ans = QObject::tr("This is an awesome application\n"
+                              "for testing feature detectors.\n"
+                              "Create you own reference logs and\n"
+                              "compare them with algorithm\'s output."
+                              "\n\nVersion: %1.\n\n"
+                              "On all questions please contact me at:\n%2")
+            .arg(QCoreApplication::applicationVersion(),
+                 QCoreApplication::organizationDomain());
+
+    return ans;
+}
+
 QStringList Manager::logs()
 {
     QStringList allLogs;

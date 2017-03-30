@@ -2,6 +2,7 @@
 #include "manager.h"
 #include "logger.h"
 #include "logheader.h"
+#include "polymath.h"
 
 #include <QFile>
 
@@ -154,4 +155,14 @@ void Analyzer::analyze()
     mResult.append("100%!!!"); // must be full info
     mResult.append("Но это не точно");
     emit resultChanged(mResult);
+}
+
+void Analyzer::countEfficiency()
+{
+    /* QPolygonF::intersected(QPolygonF& other);
+     * Возвращает пересечение полигонов
+     * QPolygonF::subtracted(QPolygonF& other);
+     * Возвращает разность полигонов
+     * + PolyMath
+     */
 }
