@@ -192,21 +192,14 @@ void Searcher::detect()
 
         cv::perspectiveTransform(obj_corners, scene_corners, H);
 
-//        if(scene_corners.at(0).x < scene_corners.at(1).x &&
-//                scene_corners.at(1).y < scene_corners.at(2).y &&
-//                scene_corners.at(3).x < scene_corners.at(2).x &&
-//                scene_corners.at(0).y < scene_corners.at(3).y)
-        if (!PolyMath::instance()->cvIsSelfIntersecting(scene_corners))
+        if (PolyMath::instance()->cvIsCorrect(scene_corners))
         {
             line(mResultImg, scene_corners.at(0), scene_corners.at(1), cv::Scalar(0, 255, 0), 2 );
             line(mResultImg, scene_corners.at(1), scene_corners.at(2), cv::Scalar(0, 255, 0), 2 );
             line(mResultImg, scene_corners.at(2), scene_corners.at(3), cv::Scalar(0, 255, 0), 2 );
             line(mResultImg, scene_corners.at(3), scene_corners.at(0), cv::Scalar(0, 255, 0), 2 );
 
-            mCurrentStrobe.append(QPointF(scene_corners.at(0).x, scene_corners.at(0).y));
-            mCurrentStrobe.append(QPointF(scene_corners.at(1).x, scene_corners.at(1).y));
-            mCurrentStrobe.append(QPointF(scene_corners.at(2).x, scene_corners.at(2).y));
-            mCurrentStrobe.append(QPointF(scene_corners.at(3).x, scene_corners.at(3).y));
+            mCurrentStrobe = PolyMath::instance()->cvToQPoly(scene_corners);
         }
     }
     mElapsedTime = timer->elapsed();

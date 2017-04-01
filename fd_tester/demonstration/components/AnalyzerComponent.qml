@@ -46,6 +46,8 @@ ColumnLayout {
             anchors.left: countBtn.right
             anchors.right: parent.right
             anchors.leftMargin: 5
+            onCurrentIndexChanged: currentIndex = 0;
+            selectByMouse: false
         }
     }
 

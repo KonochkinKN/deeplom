@@ -39,6 +39,15 @@ private:
     QString mLogForTestFile;
     QString mLogForTestTitle;
 
+    // Insider information
+    quint32 mRefFrame;
+    quint32 mTestFrame;
+    QList<QPair<QPolygonF, qint64>> mRefData;
+    QList<QPair<QPolygonF, qint64>> mTestData;
+
+
+    bool readRefLog();
+    bool readTestLog();
     void countEfficiency();
 };
 
