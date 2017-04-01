@@ -14,8 +14,6 @@ RowLayout{
 
     Component.onCompleted: videoFile.update()
 
-    QmlManager{ id: man;}
-
     Storage{ id: storage;}
 
     AnalyzerComponent{

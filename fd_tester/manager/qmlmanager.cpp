@@ -78,8 +78,8 @@ QString QmlManager::cleanInvalidLogs()
     QStringList files = dir.entryList(QDir::Files);
     QStringList logs = pManager->logs();
 
-    foreach (QString log, logs)
-        log += pManager->logFilesExtension();
+    for (int i = 0; i < logs.size(); i++)
+        logs[i] += pManager->logFilesExtension();
 
     for(int i = 0; i < files.size(); i++)
     {

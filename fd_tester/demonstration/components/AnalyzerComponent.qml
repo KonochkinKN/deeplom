@@ -11,8 +11,6 @@ ColumnLayout {
     property string refLog: refLogsList.currentText
     property string testLog: testLogsList.currentText
 
-    QmlManager{ id: man;}
-
     MessageDialog{
         id: msg
         title: qsTr("Info")
@@ -59,7 +57,7 @@ ColumnLayout {
         CustomListView{
             id: refLogsList
             title: qsTr("Reference logs")
-            listModel: man.refLogsByVideo(videoFile)
+            listModel: QmlManager.refLogsByVideo(videoFile)
             Layout.preferredHeight: parent.height*0.99
             Layout.preferredWidth: parent.width*0.49
         }
@@ -67,7 +65,7 @@ ColumnLayout {
         CustomListView{
             id: testLogsList
             title: qsTr("Algorithms logs")
-            listModel: man.testLogsByVideo(videoFile)
+            listModel: QmlManager.testLogsByVideo(videoFile)
             Layout.preferredHeight: parent.height*0.99
             Layout.preferredWidth: parent.width*0.49
         }

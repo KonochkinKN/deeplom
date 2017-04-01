@@ -236,14 +236,7 @@ bool Analyzer::readTestLog()
 
 void Analyzer::countEfficiency()
 {
-    /* QPolygonF::intersected(QPolygonF& other);
-     * Возвращает пересечение полигонов
-     * QPolygonF::subtracted(QPolygonF& other);
-     * Возвращает разность полигонов
-     * + PolyMath
-     */
-
-    double eff = 0.0; // summary efficiency
+    double eff = 0.0;   // summary efficiency
     double avgRA = 0.0; // average reference strobe area
     double avgTA = 0.0; // average test strobe area
     double avgIA = 0.0; // average intersection strobe area
@@ -263,7 +256,6 @@ void Analyzer::countEfficiency()
         QPointF refC = PolyMath::instance()->massCenter(refR);
         QPointF testC = PolyMath::instance()->massCenter(testR);
         QPointF diffC = refC - testC;
-        __print << refC << testC << diffC;
         double refA = PolyMath::instance()->area(refR);
         double testA = PolyMath::instance()->area(testR);
         double insA = PolyMath::instance()->area(insR);

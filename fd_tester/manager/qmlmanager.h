@@ -3,12 +3,15 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QQmlEngine>
+#include <QJSEngine>
 
 #include "manager.h"
 
 class QmlManager : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(QmlManager)
 
 public:
     explicit QmlManager(QObject *parent = 0);
@@ -38,6 +41,14 @@ public:
     };
 
     Q_ENUMS(Algs)
+
+    static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine)
+    {
+        Q_UNUSED(engine)
+        Q_UNUSED(scriptEngine)
+
+        return new QmlManager();
+    }
 
 private:
     Manager* pManager;

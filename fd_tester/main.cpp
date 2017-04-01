@@ -31,10 +31,12 @@ int main(int argc, char *argv[])
     qmlRegisterType<Storage>("awesome.app.fdt", 1, 0, "Storage");
     qmlRegisterType<Analyzer>("awesome.app.fdt", 1, 0, "Analyzer");
     qmlRegisterType<VideoData>("awesome.app.fdt", 1, 0, "VideoData");
-    qmlRegisterType<QmlManager>("awesome.app.fdt", 1, 0, "QmlManager");
     qmlRegisterType<SmartVideoData>("awesome.app.fdt", 1, 0, "SmartVideoData");
     qmlRegisterType<RefLogGenerator>("awesome.app.fdt", 1, 0, "RefLogGenerator");
     qmlRegisterType<CompareVideoData>("awesome.app.fdt", 1, 0, "CompareVideoData");
+
+    qmlRegisterSingletonType<QmlManager>("awesome.app.fdt", 1, 0,
+                                         "QmlManager", &QmlManager::qmlInstance);
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QLatin1String("qrc:/demonstration/main.qml")));

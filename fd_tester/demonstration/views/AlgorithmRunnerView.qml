@@ -20,8 +20,6 @@ RowLayout{
 
     Component.onCompleted: init();
 
-    QmlManager{ id: man;}
-
     Storage{ id: storage;}
 
     ColumnLayout{
@@ -157,7 +155,7 @@ RowLayout{
                 Column{
                     Repeater{
                         id: algList
-                        model: man.algorithms().slice(1);
+                        model: QmlManager.algorithms().slice(1);
 
                         RadioButton{
                             text: modelData

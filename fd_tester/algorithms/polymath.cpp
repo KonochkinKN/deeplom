@@ -54,7 +54,7 @@ bool PolyMath::isConvex(const QPolygonF &poly)
         QPointF side1 = poly.at(i) - poly.at((i-1+s)%s);
         QPointF side2 = poly.at(i) - poly.at((i+1)%s);
 
-        double v = side1.x()*side2.y() - side1.y()*side2.y();
+        double v = side1.x()*side2.y() - side1.y()*side2.x();
         a += (v >= 0) ? 1 : -1;
     }
 
@@ -173,7 +173,7 @@ bool PolyMath::cvIsConvex(const std::vector<cv::Point2f> &poly)
         cv::Point2f side1 = poly.at(i) - poly.at((i-1+s)%s);
         cv::Point2f side2 = poly.at(i) - poly.at((i+1)%s);
 
-        double v = side1.x*side2.y - side1.y*side2.y;
+        double v = side1.x*side2.y - side1.y*side2.x;
         a += (v >= 0) ? 1 : -1;
     }
 

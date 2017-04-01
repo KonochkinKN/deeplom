@@ -19,10 +19,7 @@ ApplicationWindow{
 
 //    Component.onCompleted: showFullScreen()
 
-    QmlManager{ id: mainObj;}
-
     MainWindow{ anchors.fill: parent;}
-
 
     NewControls.Popup {
         id: popup
@@ -33,7 +30,7 @@ ApplicationWindow{
         modal: true
         focus: true
         closePolicy: NewControls.Popup.CloseOnPressOutside
-        onOpened: mainObj.logsPathToClipBoard()
+        onOpened: QmlManager.logsPathToClipBoard()
         enter: Transition {
             NumberAnimation {
                 property: "opacity";
@@ -72,7 +69,7 @@ ApplicationWindow{
                 text: qsTr("Clear logs")
                 shortcut: "Ctrl+C"
                 onTriggered: {
-                    msg.text = mainObj.cleanLogs()
+                    msg.text = QmlManager.cleanLogs()
                     msg.open()
                 }
             }
@@ -80,7 +77,7 @@ ApplicationWindow{
                 text: qsTr("Clear invalid logs")
                 shortcut: "Ctrl+I"
                 onTriggered: {
-                    msg.text = mainObj.cleanInvalidLogs()
+                    msg.text = QmlManager.cleanInvalidLogs()
                     msg.open()
                 }
             }
@@ -99,7 +96,7 @@ ApplicationWindow{
             }
             MenuItem{
                 text: qsTr("About Qt")
-                onTriggered: mainObj.aboutQt()
+                onTriggered: QmlManager.aboutQt()
             }
         }
     }
@@ -108,7 +105,7 @@ ApplicationWindow{
         id: about
         title: qsTr("About")
         icon: StandardIcon.Information
-        Component.onCompleted: text = mainObj.mission();
+        Component.onCompleted: text = QmlManager.mission()
     }
 
     menuBar: menu

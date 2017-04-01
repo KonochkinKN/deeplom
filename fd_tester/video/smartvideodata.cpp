@@ -82,7 +82,7 @@ void SmartVideoData::startDetecting()
 
     this->mConnection = QObject::connect(pSearcher, &Searcher::detected, [=]
     {
-        this->pTimer->singleShot(1, this, &SmartVideoData::onDetected);
+        this->pTimer->singleShot(100, this, &SmartVideoData::onDetected);
     });
 
     connect(pSearcher, &Searcher::error, this, &SmartVideoData::message);
