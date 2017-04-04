@@ -177,7 +177,7 @@ ColumnLayout{
         }
     }
 
-    /*  $ key catcher $
+    /*! $ key catcher $
         R       = rotate clockwise
         right   = move right
         left    = move left

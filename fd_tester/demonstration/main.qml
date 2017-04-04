@@ -13,8 +13,8 @@ ApplicationWindow{
     id: mainView
     objectName: "mainView"
     title: qsTr("Algorithm tester")
-    width: 400
-    height: 400
+    minimumHeight: 400
+    minimumWidth: 400
     visible: true
 
 //    Component.onCompleted: showFullScreen()
@@ -69,16 +69,16 @@ ApplicationWindow{
                 text: qsTr("Clear logs")
                 shortcut: "Ctrl+C"
                 onTriggered: {
-                    msg.text = QmlManager.cleanLogs()
-                    msg.open()
+                    msg.text = QmlManager.cleanLogs();
+                    msg.open();
                 }
             }
             MenuItem{
                 text: qsTr("Clear invalid logs")
                 shortcut: "Ctrl+I"
                 onTriggered: {
-                    msg.text = QmlManager.cleanInvalidLogs()
-                    msg.open()
+                    msg.text = QmlManager.cleanInvalidLogs();
+                    msg.open();
                 }
             }
             MenuItem{

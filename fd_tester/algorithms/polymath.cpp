@@ -66,9 +66,10 @@ bool PolyMath::isCorrect(const QPolygonF &poly)
     return this->isConvex(poly) && !this->isSelfIntersecting(poly);
 }
 
-/*! @brief Counts center of mass of polygon *
+/**
+ * @brief Counts center of mass of polygon
  * @param QPolygonF poly - polygon
- * @return QPointF - center of mass *
+ * @return QPointF - center of mass
  * @details Parse a polygon into triangles.
  * Count their centers of mass. Calculate
  * the center of mass of the original figure
@@ -80,17 +81,18 @@ bool PolyMath::isCorrect(const QPolygonF &poly)
  */
 QPointF PolyMath::massCenter(const QPolygonF &poly)
 {
-    if (poly.size() == 0)
+    int n = poly.size();
+    switch (n)
+    {
+    case 0:
         return QPointF();
-
-    if (poly.size() == 1)
+    case 1:
         return poly.at(0);
-
-    if (poly.size() == 2)
+    case 2:
         return (poly.at(0) + poly.at(1))/2;
+    }
 
     double S = 0.0;
-    int n = poly.size();
     QPointF c = {0.0, 0.0};
     QPointF m = this->pointSumAvg(poly);
     for (int i = 0; i < n; i++)

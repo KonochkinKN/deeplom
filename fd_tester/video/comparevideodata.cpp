@@ -168,7 +168,8 @@ void CompareVideoData::timerEvent(QTimerEvent *)
 
     if (this->isValid())
     {
-        if (mFrame < (mRefFirstFrame + mRefStrobes.size()))
+        if (mFrame < (mRefFirstFrame + mRefStrobes.size()) &&
+                mFrame >= mRefFirstFrame)
         {
             QPolygonF poly = mRefStrobes.at(mFrame - mRefFirstFrame);
             if (poly.size() > 3)
@@ -184,7 +185,8 @@ void CompareVideoData::timerEvent(QTimerEvent *)
             }
         }
 
-        if (mFrame < (mTestFirstFrame + mTestStrobes.size()))
+        if (mFrame < (mTestFirstFrame + mTestStrobes.size()) &&
+                mFrame >= mTestFirstFrame)
         {
             QPolygonF poly = mTestStrobes.at(mFrame - mTestFirstFrame);
             if (poly.size() > 3)

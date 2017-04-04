@@ -98,25 +98,28 @@ void RefLogGenerator::saveStrobe(QRectF strobe, int angle)
     }
 
     QPolygonF resPoly;
-    float x, y;
-    float sin = std::sin(angle * M_PIl / 180);
-    float cos = std::cos(angle * M_PIl / 180);
-    // top-left
-    x = strobe.x();
-    y = strobe.y();
-    resPoly.append(QPointF(x, y));
-    // top-right
-    x += strobe.width()*cos;
-    y += strobe.width()*sin;
-    resPoly.append(QPointF(x, y));
-    // bottom-right
-    x -= strobe.height()*sin;
-    y += strobe.height()*cos;
-    resPoly.append(QPointF(x, y));
-    // bottom-left
-    x -= strobe.width()*cos;
-    y -= strobe.width()*sin;
-    resPoly.append(QPointF(x, y));
+    if (!strobe.isEmpty())
+    {
+        float x, y;
+        float sin = std::sin(angle * M_PIl / 180);
+        float cos = std::cos(angle * M_PIl / 180);
+        // top-left
+        x = strobe.x();
+        y = strobe.y();
+        resPoly.append(QPointF(x, y));
+        // top-right
+        x += strobe.width()*cos;
+        y += strobe.width()*sin;
+        resPoly.append(QPointF(x, y));
+        // bottom-right
+        x -= strobe.height()*sin;
+        y += strobe.height()*cos;
+        resPoly.append(QPointF(x, y));
+        // bottom-left
+        x -= strobe.width()*cos;
+        y -= strobe.width()*sin;
+        resPoly.append(QPointF(x, y));
+    }
 
     if (mCurrentFrame == mFirstFrame + mDataList.size())
     {
