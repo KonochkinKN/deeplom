@@ -20,5 +20,6 @@
         <file>demonstration/components/AnalyzerComponent.qml</file>
         <file>design/LCDNova.ttf</file>
         <file>demonstration/components/ContrastDigitalNumber.qml</file>
+        <file>demonstration/components/MenuComponent.qml</file>
     </qresource>
 </RCC>

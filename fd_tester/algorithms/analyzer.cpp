@@ -6,11 +6,13 @@
 
 #include <QFile>
 #include <QDebug>
+#include <QJsonDocument>
 
 Analyzer::Analyzer(QObject *parent)
     : QObject(parent)
     , mRefFrame(0)
     , mTestFrame(0)
+    , mCurrentAlgorithm(alg::None)
 {
 
 }
@@ -45,10 +47,12 @@ void Analyzer::setRefLog(QString title)
     emit refLogChanged(mRefLogTitle);
 }
 
-void Analyzer::setLogForTest(QString title)
+void Analyzer::setTestLog(QString title)
 {
-    mLogForTestFile = "";
-    mLogForTestTitle = "";
+    mTestLogFile.clear();
+    mTestLogTitle.clear();
+    mCurrentVideo.clear();
+    mCurrentAlgorithm = alg::None;
 
     if (title.isEmpty())
         return;
@@ -64,10 +68,10 @@ void Analyzer::setLogForTest(QString title)
         return;
     }
 
-    mLogForTestFile = absPath;
-    mLogForTestTitle = title;
+    mTestLogFile = absPath;
+    mTestLogTitle = title;
 
-    emit logForTestChanged(mLogForTestTitle);
+    emit testLogChanged(mTestLogTitle);
 }
 
 void Analyzer::analyze()
@@ -134,14 +138,14 @@ bool Analyzer::readTestLog()
     mTestData.clear();
 
     // check file
-    if (mLogForTestTitle.isEmpty())
+    if (mTestLogTitle.isEmpty())
     {
         emit message(tr("No log for test file provided"));
         return false;
     }
 
     // check and read test log
-    Logger* logReader = new Logger(mLogForTestFile);
+    Logger* logReader = new Logger(mTestLogFile);
     LogHeader logHeader = logReader->readHeader();
 
     if (logHeader.isReference() || !logHeader.isValid())
@@ -159,6 +163,8 @@ bool Analyzer::readTestLog()
     }
 
     mTestFrame = logHeader.firstFrame;
+    mCurrentVideo = logHeader.videoFile;
+    mCurrentAlgorithm = logHeader.algorithmType;
     while(!logReader->atEnd())
         mTestData.append(logReader->readNextBlock());
 
@@ -169,13 +175,8 @@ bool Analyzer::readTestLog()
 
 void Analyzer::countEfficiency()
 {
-    double eff = 0.0;   // summary efficiency
-    double avgRA = 0.0; // average reference strobe area
-    double avgTA = 0.0; // average test strobe area
-    double avgIA = 0.0; // average intersection strobe area
-    double avgXD = 0.0; // average x-axis center difference
-    double avgYD = 0.0; // average y-axis center difference
-    double avgAD = 0.0; // average absolut center difference
+    Data data;
+    data.setNull();
 
     quint32 firstFrame = std::max(mRefFrame, mTestFrame);
     quint32 lastFrame = std::min(mTestData.size() + mTestFrame,
@@ -183,6 +184,7 @@ void Analyzer::countEfficiency()
 
     for (quint32 i = firstFrame; i < lastFrame; i++)
     {
+        data.avgDT += mTestData.at(i - mTestFrame).second;
         QPolygonF refR = mRefData.at(i - mRefFrame).first;
         QPolygonF testR = mTestData.at(i - mTestFrame).first;
         QPolygonF insR = refR.intersected(testR);
@@ -193,42 +195,93 @@ void Analyzer::countEfficiency()
         double testA = PolyMath::instance()->area(testR);
         double insA = PolyMath::instance()->area(insR);
         // area
-        avgRA += refA;
-        avgTA += testA;
-        avgIA += insA;
+        data.avgRA += refA;
+        data.avgTA += testA;
+        data.avgIA += insA;
         // center
-        avgXD += diffC.x();
-        avgYD += diffC.y();
-        avgAD += std::sqrt(QPointF::dotProduct(diffC, diffC));
+        data.avgXD += diffC.x();
+        data.avgYD += diffC.y();
+        data.avgAD += std::sqrt(QPointF::dotProduct(diffC, diffC));
         // summary
         if (!testA && !refA)
         {
-            eff += 1.0;
+            data.eff += 1.0;
         }
         else if (refA  > 0)
         {
-            eff += insA / refA;
+            data.eff += insA / refA;
         }
+
+        if (!insA)
+            data.detErrors++;
     }
 
-    quint32 n = lastFrame - firstFrame;
-    eff /= n;
-    avgRA /= n;
-    avgTA /= n;
-    avgIA /= n;
-    avgXD /= n;
-    avgYD /= n;
-    avgAD /= n;
+    data.totFrames = lastFrame - firstFrame;
+    data.average();
 
-    mResult.append(tr("Efficiency = %1\%").arg(eff*100));
+    this->setResult(data);
+    this->saveResult(data);
+}
+
+void Analyzer::setResult(const Data &data)
+{
+    mResult.clear();
+    mResult.append(tr("Efficiency = %1\%").arg(data.eff*100));
+    mResult.append(tr("Average detection time: %1").arg(data.avgDT));
+    mResult.append(tr("Total frames processed: %1").arg(data.totFrames));
+    mResult.append(tr("Detection errors: %1").arg(data.detErrors));
     mResult.append(tr("Area charactersistics:"));
-    mResult.append(tr("    Average reference strobe area: %1").arg(avgRA));
-    mResult.append(tr("    Average test strobe area: %1").arg(avgTA));
-    mResult.append(tr("    Average intersection strobe area: %1").arg(avgIA));
+    mResult.append(tr("    Average reference strobe area: %1").arg(data.avgRA));
+    mResult.append(tr("    Average test strobe area: %1").arg(data.avgTA));
+    mResult.append(tr("    Average intersection strobe area: %1").arg(data.avgIA));
     mResult.append(tr("Centers charactersistics:"));
-    mResult.append(tr("    Average x-axis center difference: %1").arg(avgXD));
-    mResult.append(tr("    Average y-axis center difference: %1").arg(avgYD));
-    mResult.append(tr("    Average average absolut center difference: %1").arg(avgAD));
+    mResult.append(tr("    Average x-axis center difference: %1").arg(data.avgXD));
+    mResult.append(tr("    Average y-axis center difference: %1").arg(data.avgYD));
+    mResult.append(tr("    Average average absolute center difference: %1").arg(data.avgAD));
     emit resultChanged(mResult);
+}
 
+void Analyzer::saveResult(const Data &data)
+{
+    QString path = Manager::instance()->dataPath() +
+            alg::algToString.at(this->mCurrentAlgorithm) + "_" +
+            QDateTime::currentDateTime().toString("dd.MM.yyyy_hh:mm:ss") +
+            Manager::instance()->dataFilesExtension();
+
+    QFile file(path);
+
+    if (file.isOpen())
+        return;
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        return;
+
+    QJsonDocument doc(this->parseData(data));
+    file.write(doc.toJson());
+
+    file.close();
+}
+
+QJsonObject Analyzer::parseData(const Data &data)
+{
+    QJsonObject jsonData
+    {
+        {"Algorithm", alg::algToString.at(this->mCurrentAlgorithm)},
+        {"Date", QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss")},
+        {"Video", this->mCurrentVideo},
+        {"Efficiency", data.eff},
+        {"Avg det time", data.avgDT},
+        {"Fames", data.totFrames},
+        {"Errors", data.detErrors},
+        {"Area", QJsonObject(
+            {{"Avg ref area", data.avgRA},
+             {"Avg test area", data.avgTA},
+             {"Avg ins area", data.avgIA}})},
+        {"Centers", QJsonObject(
+            {{"Avg x diff", data.avgXD},
+             {"Avg y diff", data.avgYD},
+             {"Avg abs diff", data.avgAD}})}
+    };
+
+    return jsonData;
 }

@@ -45,14 +45,6 @@ VideoOutput{
         videoData.stop()
     }
 
-    function setRefLog(log){
-        videoData.setRefLog(log)
-    }
-
-    function setTestLog(log){
-        videoData.setRefLog(log)
-    }
-
     MessageDialog{
         id: msgInfo
         title: qsTr("Info")

@@ -8,7 +8,7 @@ Rectangle{
     property variant listModel
     property string title
 
-    property int currentIndex: list.currentIndex
+    property int currentIndex: list.model.length > 0 ? list.currentIndex : -1
     property string currentText: (list.currentIndex >= 0) ? list.currentItem.text : ""
 
     Component{

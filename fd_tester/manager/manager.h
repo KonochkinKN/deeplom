@@ -38,8 +38,11 @@ public:
     QString mission();
     QString consoleMission();
     QString logsDir(){return "logs";}
+    QString dataDir(){return "data";}
     QString logFilesExtension(){return ".log";}
+    QString dataFilesExtension(){return ".txt";}
     QString logsPath(){return mDataLocation.arg(this->logsDir());}
+    QString dataPath(){return mDataLocation.arg(this->dataDir());}
     QStringList logs();
 
 private:

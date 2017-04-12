@@ -51,7 +51,6 @@ RowLayout{
 
         VideoControlBar{
             id: controls
-            enabled: !video.detecting
             duration: video.duration
             anchors.left: video.left
             anchors.right: video.right
@@ -64,7 +63,6 @@ RowLayout{
             onPlay: video.play()
             onSeek: video.seek(pos)
         }
-
 
         Button{
             id: closeBut

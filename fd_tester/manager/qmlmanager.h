@@ -21,11 +21,14 @@ public:
     Q_INVOKABLE QString mission();
     Q_INVOKABLE QStringList logs();
     Q_INVOKABLE QString logFilesPath();
+    Q_INVOKABLE QString dataFilesPath();
     Q_INVOKABLE QStringList algorithms();
     Q_INVOKABLE void logsPathToClipBoard();
+    Q_INVOKABLE void dataPathToClipBoard();
 
     Q_INVOKABLE QString cleanLogs();
     Q_INVOKABLE QString cleanInvalidLogs();
+    Q_INVOKABLE QString cleanAnalyzerData();
 
     Q_INVOKABLE QStringList refLogsByVideo(QString video);
     Q_INVOKABLE QStringList testLogsByVideo(QString video);

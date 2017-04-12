@@ -77,4 +77,5 @@ DISTFILES += \
     demonstration/components/CompareVideoComponent.qml \
     demonstration/components/CustomListView.qml \
     demonstration/components/AnalyzerComponent.qml \
-    demonstration/components/ContrastDigitalNumber.qml
+    demonstration/components/ContrastDigitalNumber.qml \
+    demonstration/components/MenuComponent.qml

@@ -42,6 +42,11 @@ QString QmlManager::logFilesPath()
     return pManager->logsPath();
 }
 
+QString QmlManager::dataFilesPath()
+{
+    return pManager->dataPath();
+}
+
 QStringList QmlManager::algorithms()
 {
     return alg::algToString;
@@ -50,6 +55,11 @@ QStringList QmlManager::algorithms()
 void QmlManager::logsPathToClipBoard()
 {
     QApplication::clipboard()->setText(this->logFilesPath());
+}
+
+void QmlManager::dataPathToClipBoard()
+{
+    QApplication::clipboard()->setText(this->dataFilesPath());
 }
 
 QString QmlManager::cleanLogs()
@@ -62,13 +72,13 @@ QString QmlManager::cleanLogs()
     {
         QFile file(fullPath + files.at(i));
         if (!file.exists())
-            return tr("Log %1 file was not found.").arg(files.at(i));
+            return tr("Log file %1 was not found.").arg(files.at(i));
 
         if (!file.remove())
-            return tr("Log %1 was not removed.").arg(files.at(i));
+            return tr("Log file %1 was not removed.").arg(files.at(i));
     }
 
-    return tr("Logs dir are clear");
+    return tr("Logs dir is clear");
 }
 
 QString QmlManager::cleanInvalidLogs()
@@ -87,14 +97,33 @@ QString QmlManager::cleanInvalidLogs()
         {
             QFile file(fullPath + files.at(i));
             if (!file.exists())
-                return tr("Log %1 file was not found.").arg(files.at(i));
+                return tr("Log file %1 was not found.").arg(files.at(i));
 
             if (!file.remove())
-                return tr("Log %1 was not removed.").arg(files.at(i));
+                return tr("Log file %1 was not removed.").arg(files.at(i));
         }
     }
 
     return tr("Invalid logs deleted");
+}
+
+QString QmlManager::cleanAnalyzerData()
+{
+    QString fullPath = pManager->dataPath();
+    QDir dir(fullPath);
+    QStringList files = dir.entryList(QDir::Files);
+
+    for(int i = 0; i < files.size(); i++)
+    {
+        QFile file(fullPath + files.at(i));
+        if (!file.exists())
+            return tr("Data file %1 was not found.").arg(files.at(i));
+
+        if (!file.remove())
+            return tr("Data file %1 was not removed.").arg(files.at(i));
+    }
+
+    return tr("Data dir is clear");
 }
 
 QStringList QmlManager::refLogsByVideo(QString video)

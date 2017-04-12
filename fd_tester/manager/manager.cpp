@@ -32,6 +32,9 @@ Manager::Manager()
 
     if (!dir.exists(this->logsPath()))
         dir.mkpath(this->logsPath());
+
+    if (!dir.exists(this->dataPath()))
+        dir.mkpath(this->dataPath());
 }
 
 Manager::~Manager()

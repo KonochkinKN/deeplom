@@ -8,6 +8,7 @@ import QtQuick.Controls.Styles 1.4
 import awesome.app.fdt 1.0
 
 import "windows"
+import "components"
 
 ApplicationWindow{
     id: mainView
@@ -30,7 +31,9 @@ ApplicationWindow{
         modal: true
         focus: true
         closePolicy: NewControls.Popup.CloseOnPressOutside
-        onOpened: QmlManager.logsPathToClipBoard()
+        onOpened: isLog ? QmlManager.logsPathToClipBoard()
+                        : QmlManager.dataPathToClipBoard()
+
         enter: Transition {
             NumberAnimation {
                 property: "opacity";
@@ -45,68 +48,34 @@ ApplicationWindow{
                 duration: 500;
             }
         }
-        Text{ text: qsTr("Logs path copied to clipboard");}
+        Text{ text: qsTr("%1 path copied to clipboard").
+            arg(popup.isLog ? qsTr("Logs") : qsTr("Data"));}
+
+        property bool isLog: true;
     }
+
+    MenuComponent{
+        id: menu;
+        onLogs: { popup.isLog = true; popup.open();}
+        onData: { popup.isLog = false; popup.open();}
+        onAbout: about.open()
+        onQuit: Qt.quit()
+    }
+
+    menuBar: menu
 
     MessageDialog{
         id: msg
         title: qsTr("Info")
-        standardButtons: StandardButton.Ok
         icon: StandardIcon.Information
-    }
-
-    MenuBar{
-        id: menu
-
-        Menu{
-            title: qsTr("File")
-            MenuItem{
-                text: qsTr("Logs path")
-                shortcut: "Ctrl+L"
-                onTriggered: popup.open()
-            }
-            MenuItem{
-                text: qsTr("Clear logs")
-                shortcut: "Ctrl+C"
-                onTriggered: {
-                    msg.text = QmlManager.cleanLogs();
-                    msg.open();
-                }
-            }
-            MenuItem{
-                text: qsTr("Clear invalid logs")
-                shortcut: "Ctrl+I"
-                onTriggered: {
-                    msg.text = QmlManager.cleanInvalidLogs();
-                    msg.open();
-                }
-            }
-            MenuItem{
-                text: qsTr("Quit")
-                shortcut: "Ctrl+Q"
-                onTriggered: Qt.quit()
-            }
-        }
-
-        Menu{
-            title: qsTr("Help")
-            MenuItem{
-                text: qsTr("About")
-                onTriggered: about.open()
-            }
-            MenuItem{
-                text: qsTr("About Qt")
-                onTriggered: QmlManager.aboutQt()
-            }
-        }
+        standardButtons: StandardButton.Ok
     }
 
     MessageDialog{
         id: about
         title: qsTr("About")
+        text: QmlManager.mission()
         icon: StandardIcon.Information
-        Component.onCompleted: text = QmlManager.mission()
+        standardButtons: StandardButton.Ok
     }
-
-    menuBar: menu
 }
