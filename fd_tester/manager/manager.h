@@ -11,13 +11,15 @@ enum Algorithms
 {
     None,
     ORB,
-    ORB2,
+    ORB4,
     SIFT,
     SURF,
+    USURF,
     BRISK
 };
-const QStringList algToString({"None", "ORB", "ORB2",
-                               "SIFT", "SURF", "BRISK"});
+const QStringList algToString({"None", "ORB", "ORB(4)",
+                               "SIFT", "SURF",
+                               "U-SURF","BRISK"});
 }
 
 namespace mng

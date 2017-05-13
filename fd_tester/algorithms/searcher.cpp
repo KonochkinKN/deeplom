@@ -77,38 +77,46 @@ void Searcher::detect()
         return;
     }
 
+    // choose approach
     cv::Ptr<cv::Feature2D> detector;
     cv::Ptr<cv::DescriptorMatcher> matcher;
     switch(mAlgorithm)
     {
     case alg::ORB:
     {
-        detector = new cv::ORB(500, 2);
+        detector = new cv::ORB(500, 1.1f);
         matcher = new cv::BFMatcher(cv::NORM_HAMMING, true);
         break;
     }
-    case alg::ORB2:
+    case alg::ORB4:
     {
-        detector = new cv::ORB(500, 2, 8, 31, 0, 4);
+        detector = new cv::ORB(500, 1.1f, 8, 31, 0, 4);
         matcher = new cv::BFMatcher(cv::NORM_HAMMING2, true);
         break;
     }
     case alg::SIFT:
     {
-        detector = new cv::SIFT(400);
+        detector = new cv::SIFT(500);
         matcher = new cv::FlannBasedMatcher();
         break;
     }
     case alg::SURF:
     {
-        detector = new cv::SURF(400);
+        detector = new cv::SURF(100);
+        matcher = new cv::FlannBasedMatcher();
+        break;
+    }
+    case alg::USURF:
+    {
+        detector = new cv::SURF(100, 4, 3, true, true);
         matcher = new cv::FlannBasedMatcher();
         break;
     }
     case alg::BRISK:
     {
-        detector = new cv::BRISK();
-        matcher = new cv::FlannBasedMatcher();
+        detector = new cv::BRISK(30, 4, 1.0f);
+        matcher = new cv::FlannBasedMatcher(
+                    new cv::flann::LshIndexParams(20, 10, 2));
         break;
     }
     default:
@@ -130,6 +138,7 @@ void Searcher::detect()
     cv::Mat tmpDescriptors;
     cv::Mat imgDescriptors;
 
+    // detect
     QElapsedTimer* timer = new QElapsedTimer;
     timer->start();
     try
@@ -148,24 +157,24 @@ void Searcher::detect()
         return;
     }
 
-    if(mAlgorithm == alg::BRISK)
-    {
-        tmpDescriptors.convertTo(tmpDescriptors, CV_32F);
-        imgDescriptors.convertTo(imgDescriptors, CV_32F);
-    }
+    // check elapsed time
+    mElapsedTime = timer->elapsed();
+
+    // match
     matcher->match(tmpDescriptors, imgDescriptors, matches);
 
     double max_dist = 0;
     double min_dist = 100;
 
-    for(int i = 0; i < tmpDescriptors.rows; i++)
+    // check distances
+    for (int i = 0; i < tmpDescriptors.rows; i++)
     {
         double dist = matches[i].distance;
-        if( dist < min_dist && dist > MIN_DIST) min_dist = dist;
-        if( dist > max_dist ) max_dist = dist;
+        if (dist < min_dist && dist > MIN_DIST) min_dist = dist;
+        if (dist > max_dist) max_dist = dist;
     }
 
-    for(uint i = 0; i < matches.size(); i++)
+    for (uint i = 0; i < matches.size(); i++)
     {
         if(matches.at(i).distance <= 2 * min_dist)
             good_matches.push_back(matches.at(i));
@@ -173,9 +182,10 @@ void Searcher::detect()
 
     mResultImg = mInputImg;
 
-    if(good_matches.size() >= 4)
+    // get strobe if its possible
+    if (good_matches.size() >= 4)
     {
-        for(uint i = 0; i < good_matches.size(); i++)
+        for (uint i = 0; i < good_matches.size(); i++)
         {
             obj.push_back(tmpKeypoints.at(good_matches.at(i).queryIdx).pt);
             scene.push_back(imgKeypoints.at(good_matches.at(i).trainIdx).pt);
@@ -202,9 +212,9 @@ void Searcher::detect()
             mCurrentStrobe = PolyMath::instance()->cvToQPoly(scene_corners);
         }
     }
-    mElapsedTime = timer->elapsed();
-    if(mElapsedTime < 50)
-        QThread::msleep(50 - mElapsedTime);
+
+    if(mElapsedTime < 25)
+        QThread::msleep(25 - mElapsedTime);
 
     detector.release();
     matcher.release();

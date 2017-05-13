@@ -37,9 +37,10 @@ public:
     {
         None    = alg::None,
         ORB     = alg::ORB,
-        ORB2    = alg::ORB2,
+        ORB4    = alg::ORB4,
         SIFT    = alg::SIFT,
         SURF    = alg::SURF,
+        USURF   = alg::USURF,
         BRISK   = alg::BRISK
     };
 
