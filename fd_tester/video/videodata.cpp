@@ -70,11 +70,14 @@ void VideoData::setVideoSurface(QAbstractVideoSurface* surface)
 
 void VideoData::setPosition(quint32 data)
 {
-    if ( !pCapture->isOpened())
+    if (!pCapture->isOpened())
         return;
 
-    if (data >= pCapture->get(CV_CAP_PROP_FRAME_COUNT))
+    if (data >= this->mEndPosition)
+    {
+        emit endReached();
         return;
+    }
 
     mFrame = data;
     if (mFrame != pCapture->get(CV_CAP_PROP_POS_FRAMES))
@@ -143,11 +146,11 @@ void VideoData::setHeight(int data)
 
 void VideoData::onTimeout()
 {
-    if ( !pCapture->isOpened() )
+    if (!pCapture->isOpened())
         return;
 
     quint32 pos = this->position() + 1;
-    if (pos < pCapture->get(CV_CAP_PROP_FRAME_COUNT))
+    if (pos < this->mEndPosition)
     {
         this->setPosition(this->position() + 1);
     }
@@ -194,6 +197,7 @@ void VideoData::updateData(bool null)
         this->setFps(-1);
         this->setWidth(-1);
         this->setHeight(-1);
+        this->setEndPosition(-1);
         mFrame = 0;
         return;
     }
@@ -210,13 +214,14 @@ void VideoData::updateData(bool null)
     pCapture->set(CV_CAP_PROP_POS_FRAMES, 0);
     mFrame = pCapture->get( CV_CAP_PROP_POS_FRAMES );
 
+    this->setEndPosition(framesTotal);
     this->setDurationSec(duration);
     this->setFps(fps);
 }
 
 void VideoData::closeSurface()
 {
-    if( pSurface && pSurface->isActive() )
+    if (pSurface && pSurface->isActive())
         pSurface->stop();
 }
 
@@ -232,7 +237,7 @@ void VideoData::timerEvent(QTimerEvent*)
         pCapture->read( frame );
     }
 
-    if(frame.empty())
+    if (frame.empty())
         return;
 
     cvtColor(frame, frame, CV_RGB2RGBA, 4);
@@ -253,4 +258,10 @@ void VideoData::timerEvent(QTimerEvent*)
 
     pSurface->present( vFrame );
     emit positionChanged(mFrame);
+}
+
+void VideoData::setEndPosition(quint32 data)
+{
+    this->mEndPosition = data;
+    emit endPositionChanged(this->mEndPosition);
 }

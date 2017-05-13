@@ -23,12 +23,14 @@ VideoOutput{
     property int videoHeight: videoData.height
     property double duration: videoData.durationSec*1000.0
     property bool playing: videoData.playing
+    property int endPosition: videoData.endPosition
 
     property bool detecting: videoData.isDetecting
 
     onSourcePathChanged: videoData.source = sourcePath;
 
     signal paused()
+    signal endPosReached()
 
     function seek(pos){
         videoData.seek(pos)
@@ -77,6 +79,12 @@ VideoOutput{
         onMessage: {
             msgInfo.text = txt
             msgInfo.open()
+        }
+        onEndReached: {
+            if (isDetecting) {
+                video.stopDetecting();
+                endPosReached();
+            }
         }
     }
 

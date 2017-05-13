@@ -60,7 +60,6 @@ ColumnLayout {
             listModel: QmlManager.refLogsByVideo(videoFile)
             Layout.preferredHeight: parent.height*0.99
             Layout.preferredWidth: parent.width*0.49
-            onCurrentIndexChanged: refLog = (currentIndex == -1) ? "" : currentText
         }
 
         CustomListView{
@@ -69,7 +68,6 @@ ColumnLayout {
             listModel: QmlManager.testLogsByVideo(videoFile)
             Layout.preferredHeight: parent.height*0.99
             Layout.preferredWidth: parent.width*0.49
-            onCurrentIndexChanged: testLog = (currentIndex == -1) ? "" : currentText
         }
     }
 }

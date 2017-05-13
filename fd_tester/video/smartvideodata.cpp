@@ -118,12 +118,15 @@ void SmartVideoData::detect()
 
 void SmartVideoData::onDetected()
 {
-    if( !this->pSurface )
+    if (!this->pSurface)
+        return;
+
+    if (!this->mIsDetecting)
         return;
 
     cv::Mat frame = this->pSearcher->getResult();
 
-    if(frame.empty())
+    if (frame.empty())
         return;
 
     if (!this->pLogger->writeNextBlock(this->pSearcher->getStrobe(),
@@ -164,10 +167,10 @@ void SmartVideoData::stopDetect()
     QObject::disconnect(mConnection);
     disconnect(pSearcher, &Searcher::error, this, &SmartVideoData::message);
 
-    this->setIterationTime(0);
-
     this->mIsDetecting = false;
     emit isDetectingChanged(this->mIsDetecting);
+
+    this->setIterationTime(0);
 }
 
 void SmartVideoData::setIterationTime(qint64 time)

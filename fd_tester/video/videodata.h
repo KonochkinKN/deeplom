@@ -29,6 +29,7 @@ public:
     Q_PROPERTY(int width READ width NOTIFY widthChanged)
     Q_PROPERTY(int height READ height NOTIFY heightChanged)
     Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
+    Q_PROPERTY(quint32 endPosition READ endPosition NOTIFY endPositionChanged)
 
     Q_INVOKABLE QAbstractVideoSurface* videoSurface() const;
     Q_INVOKABLE quint32 position();
@@ -39,6 +40,7 @@ public:
     Q_INVOKABLE int width();
     Q_INVOKABLE int height();
     Q_INVOKABLE bool playing();
+    Q_INVOKABLE quint32 endPosition(){return mEndPosition;}
 
 signals:
     void positionChanged(quint32);
@@ -49,6 +51,8 @@ signals:
     void widthChanged(int);
     void heightChanged(int);
     void playingChanged(bool);
+    void endPositionChanged(quint32);
+    void endReached();
 
 public slots:
     void setVideoSurface( QAbstractVideoSurface* surface );
@@ -67,6 +71,7 @@ protected slots:
     void onTimeout();
     void onSourceChanged();
     void updateData(bool null = false);
+    void setEndPosition(quint32 data);
 
 protected:
     QTimer* pPlaybackTimer;
@@ -75,6 +80,7 @@ protected:
     QAbstractVideoSurface* pSurface;
 
     quint32 mFrame;
+    quint32 mEndPosition;
     QString mSource;
     double mFps;
     double mDurationSec;

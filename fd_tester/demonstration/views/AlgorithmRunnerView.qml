@@ -58,7 +58,12 @@ RowLayout{
             Layout.preferredHeight: video.hasVideo
                                     ? Math.min(video.videoHeight, 480) : 480
 
-            onPositionChanged: controls.position = video.position
+            onEndPosReached: {
+                storage.saveFilePath(videoFile.name, videoFile.filePath)
+                storage.saveFilePath(objectFile.name, objectFile.filePath)
+            }
+
+            onPositionChanged: controls.position = position
         }
 
         VideoControlBar{
