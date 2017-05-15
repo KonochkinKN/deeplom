@@ -11,6 +11,8 @@ ColumnLayout {
     property string refLog: refLogsList.currentText
     property string testLog: testLogsList.currentText
 
+    signal saveVideo()
+
     MessageDialog{
         id: msg
         title: qsTr("Info")
@@ -35,7 +37,7 @@ ColumnLayout {
         Button{
             id: countBtn
             text: qsTr("Count efficiency")
-            onClicked: analyzer.analyze()
+            onClicked: { analyzer.analyze(); saveVideo();}
         }
 
         ComboBox{

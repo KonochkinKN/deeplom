@@ -22,6 +22,7 @@ RowLayout{
         Layout.preferredHeight: parent.height*0.6
         Layout.preferredWidth: 400
         Layout.alignment: Qt.AlignHCenter
+        onSaveVideo: storage.saveFilePath(Storage.VideoFile, videoFile.filePath)
     }
 
     ColumnLayout{

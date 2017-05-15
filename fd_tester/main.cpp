@@ -12,6 +12,7 @@
 #include "analyzer.h"
 #include "storage.h"
 #include "comparevideodata.h"
+#include "logrewriter.h"
 
 int main(int argc, char *argv[])
 {
@@ -37,6 +38,10 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonType<QmlManager>("awesome.app.fdt", 1, 0,
                                          "QmlManager", &QmlManager::qmlInstance);
+
+//    LogRewriter rew;
+//    rew.changeVideoFile("d_hieroglyph_15_05_2017_12:41:05",
+//                        "file:///home/kostyan/Видео/testing/noisy_distorted_hieroglyph.avi");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QLatin1String("qrc:/demonstration/main.qml")));

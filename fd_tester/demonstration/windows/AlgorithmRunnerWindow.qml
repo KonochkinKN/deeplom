@@ -10,7 +10,7 @@ Window{
     width: 1200
     height: 800
     color: "#95500C"
-    title: qsTr("Alrotithms")
+    title: qsTr("Algorithms")
     modality: Qt.ApplicationModal
 
     property bool closeWindow: false

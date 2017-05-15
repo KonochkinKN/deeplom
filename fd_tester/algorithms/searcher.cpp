@@ -84,14 +84,14 @@ void Searcher::detect()
     {
     case alg::ORB:
     {
-        detector = new cv::ORB(500, 1.1f);
-        matcher = new cv::BFMatcher(cv::NORM_HAMMING, true);
+        detector = new cv::ORB(500, 1.2f);
+        matcher = new cv::FlannBasedMatcher();
         break;
     }
     case alg::ORB4:
     {
-        detector = new cv::ORB(500, 1.1f, 8, 31, 0, 4);
-        matcher = new cv::BFMatcher(cv::NORM_HAMMING2, true);
+        detector = new cv::ORB(500, 1.2f, 8, 31, 0, 4);
+        matcher = new cv::FlannBasedMatcher();
         break;
     }
     case alg::SIFT:
@@ -159,6 +159,12 @@ void Searcher::detect()
 
     // check elapsed time
     mElapsedTime = timer->elapsed();
+
+    if (mAlgorithm == alg::ORB || mAlgorithm == alg::ORB4)
+    {
+        tmpDescriptors.convertTo(tmpDescriptors, CV_32F);
+        imgDescriptors.convertTo(imgDescriptors, CV_32F);
+    }
 
     // match
     matcher->match(tmpDescriptors, imgDescriptors, matches);
